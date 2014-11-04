@@ -1,0 +1,4 @@
+export AWS_KEY="XXX"
+export AWS_SECRET="XXX"
+export AWS_BUCKET="XXX"
+export AWS_REGION="XXX"

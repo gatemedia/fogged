@@ -3,6 +3,7 @@ Gem.loaded_specs["fogged"].dependencies.select { |d| d.type == :runtime }.each d
 end
 
 require "fogged/engine"
+require "fogged/acts_as_having_one_resource"
 
 module Fogged
   mattr_accessor :provider

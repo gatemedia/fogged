@@ -16,7 +16,11 @@ module Fogged
         }
         storage_options.merge!(:region => Fogged.aws_region) if Fogged.aws_region
         storage = Fog::Storage.new(storage_options)
-        Fogged.resources = storage.directories.create(:key => Fogged.aws_bucket)
+
+        Fogged.resources = storage.directories.get(Fogged.aws_bucket)
+        if Rails.env.test?
+          Fogged.resources = storage.directories.create(:key => Fogged.aws_bucket)
+        end
       else
         fail(ArgumentError, "Provider #{Fogged.config.provider} is not available!")
       end

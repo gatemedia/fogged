@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141104083706) do
+ActiveRecord::Schema.define(version: 20141104135257) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -45,5 +45,12 @@ ActiveRecord::Schema.define(version: 20141104083706) do
   end
 
   add_index "fogged_resources", ["token"], name: "index_fogged_resources_on_token"
+
+  create_table "images", force: true do |t|
+    t.string   "name"
+    t.integer  "resource_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
 end
