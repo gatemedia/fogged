@@ -1,0 +1,22 @@
+<% 5.times do |n| %>
+resource_text_<%= n %>:
+  extension: txt
+  uploading: false
+  content_type: text/plain
+  name: resource text <%= n %>
+  token: qwertzuiop<%= n %>
+<% end %>
+
+resource_mov:
+  extension: mov
+  uploading: false
+  content_type: video/quicktime
+  name: resource mov 1
+  token: 1234567890mov
+
+resource_png:
+  extension: png
+  uploading: false
+  content_type: image/png
+  name: resource png 1
+  token: 1234567890png
