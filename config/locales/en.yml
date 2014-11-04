@@ -2,3 +2,5 @@ en:
   fogged:
     resource:
       still_uploading: is still uploading, please confirm it first
+    resources:
+     still_uploading: are still uploading, please confirm them first

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141104135257) do
+ActiveRecord::Schema.define(version: 20141104152345) do
 
   create_table "delayed_jobs", force: true do |t|
     t.integer  "priority",   default: 0, null: false
@@ -49,6 +49,22 @@ ActiveRecord::Schema.define(version: 20141104135257) do
   create_table "images", force: true do |t|
     t.string   "name"
     t.integer  "resource_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  create_table "movie_fogged_resources", force: true do |t|
+    t.integer  "movie_id"
+    t.integer  "resource_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "movie_fogged_resources", ["movie_id"], name: "index_movie_fogged_resources_on_movie_id"
+  add_index "movie_fogged_resources", ["resource_id"], name: "index_movie_fogged_resources_on_resource_id"
+
+  create_table "movies", force: true do |t|
+    t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"
   end

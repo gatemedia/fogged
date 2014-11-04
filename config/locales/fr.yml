@@ -1,0 +1,6 @@
+en:
+  fogged:
+    resource:
+      still_uploading: est en cours d'upload, confirmez la resource!
+    resources:
+     still_uploading: sont en cours d'upload, confirmez les resources!
