@@ -13,6 +13,10 @@ module Fogged
   mattr_accessor :resources
   @@resources = nil
 
+  # controller
+  mattr_accessor :parent_controller
+  @@parent_controller = "ApplicationController"
+
   # aws
   mattr_accessor :aws_key
   @@aws_key = nil

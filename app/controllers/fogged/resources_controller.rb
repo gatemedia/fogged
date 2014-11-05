@@ -60,7 +60,7 @@
 #   }
 # }
 module Fogged
-  class ResourcesController < ApplicationController
+  class ResourcesController < Fogged.parent_controller.constantize
     before_action :select_resourceables, :only => :index
     before_action :select_resource, :only => %i(confirm destroy show update)
 

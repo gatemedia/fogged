@@ -32,6 +32,7 @@ The easiest way to configure Fogged is to add a new initializer in your Rails ap
 # file: config/initializers/fogged.rb
 Fogged.configure do |config|
   config.provider = :aws
+  config.parent_controller = "MyBasicController"
   config.aws_key = ENV["AWS_KEY"]
   config.aws_secret = ENV["AWS_SECRET"]
   config.aws_bucket = ENV["AWS_BUCKET"]
@@ -40,6 +41,7 @@ end
 ```
 
 * `provider`: the selected provider. Currently Fogged supports these: `:aws` (More to come?)
+* `parent_controller`: the parent controller for the `ResourcesController`. Defaults to `"ApplicationController"`.
 
 ### AWS S3 Config
 * `aws_key`: Your AWS key.
