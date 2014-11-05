@@ -51,9 +51,7 @@ module Fogged
       @resource = fogged_resources(:resource_png)
       FastImage.expects(:size).returns([800, 600])
 
-      assert_no_difference("Delayed::Job.count") do
-        @resource.process!
-      end
+      @resource.process!
       assert_equal 800, @resource.width
       assert_equal 600, @resource.height
       refute @resource.encoding?
@@ -61,15 +59,31 @@ module Fogged
 
     test "should process resource video" do
       @resource = fogged_resources(:resource_mov)
-      Zencoder::Job.expects(:create).returns(
-        OpenStruct.new(:body => create_output)
-      )
 
-      assert_difference("Delayed::Job.count") do
-        @resource.process!
+      @resource.process!
+
+      refute @resource.encoding?
+      refute @resource.encoding_job_id
+    end
+
+    test "should process resource video with zencoder enabled" do
+      in_a_fork do
+        require "zencoder"
+        require "delayed_job_active_record"
+
+        Fogged.zencoder_enabled = true
+
+        @resource = fogged_resources(:resource_mov)
+        Zencoder::Job.expects(:create).returns(
+          OpenStruct.new(:body => create_output)
+        )
+
+        assert_difference("Delayed::Job.count") do
+          @resource.process!
+        end
+        assert @resource.encoding?
+        assert_equal "1234567890", @resource.encoding_job_id
       end
-      assert @resource.encoding?
-      assert_equal "1234567890", @resource.encoding_job_id
     end
 
     private

@@ -93,6 +93,7 @@ module Fogged
     end
 
     def encode!
+      return unless Fogged.zencoder_enabled
       Resources::Encoder.for(self).encode!
     end
 

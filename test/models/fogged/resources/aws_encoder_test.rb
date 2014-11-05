@@ -10,27 +10,36 @@ module Fogged
       end
 
       test "should encode video file" do
-        Zencoder::Job.expects(:create).returns(
-          OpenStruct.new(:body => create_output)
-        )
-        assert_difference("Delayed::Job.count") do
-          @encoder.encode!
-        end
+        in_a_fork do
+          require "zencoder"
+          require "delayed_job_active_record"
 
-        assert @resource.encoding?
-        assert_equal 0, @resource.encoding_progress
-        assert_equal "1234567890", @resource.encoding_job_id
+          Zencoder::Job.expects(:create).returns(
+            OpenStruct.new(:body => create_output)
+          )
+          assert_difference("Delayed::Job.count") do
+            @encoder.encode!
+          end
+
+          assert @resource.encoding?
+          assert_equal 0, @resource.encoding_progress
+          assert_equal "1234567890", @resource.encoding_job_id
+        end
       end
 
       test "should not encode image file" do
-        @resource = fogged_resources(:resource_png)
-        @encoder = AWSEncoder.new(@resource)
+        in_a_fork do
+          require "delayed_job_active_record"
 
-        assert_no_difference("Delayed::Job.count") do
-          @encoder.encode!
+          @resource = fogged_resources(:resource_png)
+          @encoder = AWSEncoder.new(@resource)
+
+          assert_no_difference("Delayed::Job.count") do
+            @encoder.encode!
+          end
+          refute @resource.encoding?
+          refute @resource.encoding_job_id
         end
-        refute @resource.encoding?
-        refute @resource.encoding_job_id
       end
 
       private

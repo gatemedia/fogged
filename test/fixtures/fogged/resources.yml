@@ -20,3 +20,12 @@ resource_png:
   content_type: image/png
   name: resource png 1
   token: 1234567890png
+
+encoding_resource:
+  extension: mov
+  uploading: false
+  content_type: video/quicktime
+  name: resource mov 1
+  token: 1234567890mov
+  encoding_job_id: 1234567890
+  encoding_progress: 10

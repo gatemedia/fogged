@@ -20,8 +20,6 @@ Gem::Specification.new do |s|
   s.add_dependency "rails", "~> 4.1.7"
   s.add_dependency "fog", "~> 1.22.1"
   s.add_dependency "fastimage", "~> 1.6.3"
-  s.add_dependency "delayed_job_active_record", "~> 4.0.1"
-  s.add_dependency "zencoder", "~> 2.5.0"
   s.add_dependency "active_model_serializers", "~> 0.8.1"
 
   s.add_development_dependency "sqlite3"
@@ -29,4 +27,6 @@ Gem::Specification.new do |s|
   s.add_development_dependency "mocha"
   s.add_development_dependency "minitest-reporters"
   s.add_development_dependency "simplecov"
+  s.add_development_dependency "zencoder"
+  s.add_development_dependency "delayed_job_active_record"
 end

@@ -3,6 +3,12 @@ module Fogged
     isolate_namespace Fogged
     config.fogged = Fogged
 
+    initializer "fogged.detect_zencoder" do
+      if defined?(Zencoder) && defined?(Delayed::Job)
+        Fogged.zencoder_enabled = true
+      end
+    end
+
     initializer "fogged.resources" do
       case Fogged.provider
       when :aws

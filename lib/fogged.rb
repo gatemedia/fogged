@@ -24,6 +24,9 @@ module Fogged
   @@aws_region = nil
 
   # zencoder
+  mattr_accessor :zencoder_enabled
+  @@zencoder_enabled = false
+
   mattr_accessor :zencoder_polling_frequency
   @@zencoder_polling_frequency = 10
 
