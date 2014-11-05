@@ -11,7 +11,7 @@ Gem::Specification.new do |s|
   s.email       = ["david.fernandez@gatemedia.ch"]
   s.homepage    = "https://github.com/gatemedia"
   s.summary     = "Fogged, a Fog rails helper"
-  s.description = "Fogged provides models, controllers and helpers to use Fog more easily within Rails"
+  s.description = "Fogged provides helpers to use Fog resources more easily within Rails"
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
