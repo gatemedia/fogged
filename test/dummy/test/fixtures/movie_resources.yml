@@ -1,7 +1,0 @@
-movie_one_resource_one:
-  movie: movie_one
-  resource: resource_text_1
-
-movie_one_resource_two:
-  movie: movie_one
-  resource: resource_text_2

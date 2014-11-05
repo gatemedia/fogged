@@ -22,6 +22,7 @@ Gem::Specification.new do |s|
   s.add_dependency "fastimage", "~> 1.6.3"
   s.add_dependency "delayed_job_active_record", "~> 4.0.1"
   s.add_dependency "zencoder", "~> 2.5.0"
+  s.add_dependency "active_model_serializers", "~> 0.8.1"
 
   s.add_development_dependency "sqlite3"
   s.add_development_dependency "pry"

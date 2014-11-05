@@ -15,6 +15,9 @@ require "mocha/mini_test"
 
 Rails.backtrace_cleaner.remove_silencers!
 
+# Run any available migration from dummy app
+ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
+
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
@@ -23,4 +26,8 @@ ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
 
 class ActiveSupport::TestCase
   fixtures :all
+
+  def response_json
+    @response_json ||= JSON.parse(response.body, :symbolize_names => true)
+  end
 end

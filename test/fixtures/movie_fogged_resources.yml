@@ -1,0 +1,19 @@
+movie_one_resource_one:
+  movie: movie_one
+  resource: resource_text_1
+
+movie_one_resource_two:
+  movie: movie_one
+  resource: resource_text_2
+
+movie_two_resource_one:
+  movie: movie_two
+  resource: resource_text_3
+
+movie_two_resource_two:
+  movie: movie_two
+  resource: resource_text_4
+
+movie_two_resource_one:
+  movie: movie_two
+  resource: resource_text_5

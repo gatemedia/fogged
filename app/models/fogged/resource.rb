@@ -10,8 +10,8 @@ module Fogged
 
       if params[:query]
         results = results.where(
-          "#{table_name}.name ILIKE :query",
-          :query => "%#{params[:query]}%"
+          "#{table_name}.name LIKE :query",
+          :query => "%#{params[:query].to_s.downcase}%"
         )
       end
 

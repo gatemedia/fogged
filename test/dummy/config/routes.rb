@@ -1,4 +1,4 @@
 Rails.application.routes.draw do
-
-  mount Fogged::Engine => "/fogged"
+  resources :images, :only => :index
+  mount Fogged::Engine => "/"
 end
