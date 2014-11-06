@@ -17,16 +17,16 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 4.1.7"
-  s.add_dependency "fog", "~> 1.22.1"
-  s.add_dependency "fastimage", "~> 1.6.3"
-  s.add_dependency "active_model_serializers", "~> 0.8.1"
+  s.add_dependency "rails", "~> 4.1"
+  s.add_dependency "fog", "~> 1.22"
+  s.add_dependency "fastimage", "~> 1.6"
+  s.add_dependency "active_model_serializers", "~> 0.8"
 
-  s.add_development_dependency "sqlite3"
-  s.add_development_dependency "pry"
-  s.add_development_dependency "mocha"
-  s.add_development_dependency "minitest-reporters"
-  s.add_development_dependency "simplecov"
-  s.add_development_dependency "zencoder"
-  s.add_development_dependency "delayed_job_active_record"
+  s.add_development_dependency "sqlite3", "~> 1.3"
+  s.add_development_dependency "pry", "~> 0.10"
+  s.add_development_dependency "mocha", "~> 1.1"
+  s.add_development_dependency "minitest-reporters", "~> 1.0"
+  s.add_development_dependency "simplecov", "~> 0.8"
+  s.add_development_dependency "zencoder", "~> 2.5"
+  s.add_development_dependency "delayed_job_active_record", "~> 4.0"
 end
