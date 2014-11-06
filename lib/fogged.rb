@@ -13,6 +13,9 @@ module Fogged
   mattr_accessor :resources
   @@resources = nil
 
+  mattr_accessor :test_enabled
+  @@test_enabled = false
+
   # controller
   mattr_accessor :parent_controller
   @@parent_controller = "ApplicationController"
@@ -30,11 +33,14 @@ module Fogged
   # zencoder
   mattr_accessor :zencoder_enabled
   @@zencoder_enabled = false
-
   mattr_accessor :zencoder_polling_frequency
   @@zencoder_polling_frequency = 10
 
   def self.configure
     yield self
+  end
+
+  def self.test_mode!
+    self.test_enabled = true
   end
 end

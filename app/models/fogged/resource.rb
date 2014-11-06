@@ -85,11 +85,18 @@ module Fogged
     private
 
     def find_size!
-      size = FastImage.size(url)
-      update!(
-        :width => size.first,
-        :height => size.second
-      ) unless size.blank?
+      if Fogged.test_enabled
+        update!(
+          :width => 800,
+          :height => 600
+        )
+      else
+        size = FastImage.size(url)
+        update!(
+          :width => size.first,
+          :height => size.second
+        ) unless size.blank?
+      end
     end
 
     def encode!
