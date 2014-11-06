@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Fogged::VERSION
   s.authors     = ["David Fernandez"]
   s.email       = ["david.fernandez@gatemedia.ch"]
-  s.homepage    = "https://github.com/gatemedia"
+  s.homepage    = "https://github.com/gatemedia/fogged"
   s.summary     = "Fogged, a Fog rails helper"
   s.description = "Fogged provides helpers to use Fog resources more easily within Rails"
   s.license     = "MIT"
