@@ -1,4 +1,5 @@
 # Fogged
+[![Build Status](https://travis-ci.org/gatemedia/fogged.svg?branch=master)](https://travis-ci.org/gatemedia/fogged)
 
 Fogged is meant to ease the use of Resources which are saved on a cloud (Google Drive, AWS S3, Rackspace Files, Open Stack or others) in a Rails application.
 
