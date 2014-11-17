@@ -14,7 +14,7 @@ module ResourceTestHelper
     assert_json_objects(resources, json, :id, :url, :name)
     resources.zip([json].flatten).each do |resource, json_resource|
       if json_resource[:upload_url]
-        assert_equal resource.upload_url, json_resource[:upload_url]
+        assert_equal resource.upload_url.chop, json_resource[:upload_url].chop
       end
 
       if resource.video?
