@@ -11,6 +11,11 @@ Fogged has been implemented for:
 * Rails 4.x
 * Ruby 2.x but should work for Ruby 1.9
 
+However this gem is built agains:
+* ruby 1.9.3
+* ruby 2.0.0
+* ruby 2.1.3
+
 ## Installation
 
 ```shell

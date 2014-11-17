@@ -62,7 +62,7 @@
 module Fogged
   class ResourcesController < Fogged.parent_controller.constantize
     before_action :select_resourceables, :only => :index
-    before_action :select_resource, :only => %i(confirm destroy show update)
+    before_action :select_resource, :only => [:confirm, :destroy, :show, :update]
 
     # List all resources. Parameter type is mandatory. It indicates in which
     # "context" you want all resources. You can refine the search, using

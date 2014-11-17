@@ -18,7 +18,7 @@ module ResourceTestHelper
       end
 
       if resource.video?
-        %i(h264_url mpeg_url webm_url thumbnail_urls).each do |field|
+        [:h264_url, :mpeg_url, :webm_url, :thumbnail_urls].each do |field|
           assert_equal resource.send(field), json_resource[field]
         end
         assert_equal((resource.encoding_progress || 0), json_resource[:encoding_progress])

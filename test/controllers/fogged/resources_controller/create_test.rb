@@ -31,7 +31,7 @@ module Fogged
       end
     end
 
-    %i(filename content_type name).each do |field|
+    [:filename, :content_type, :name].each do |field|
       test "should not create resource without #{field}" do
         assert_no_difference("Resource.count") do
           assert_raise(ActionController::ParameterMissing) do
