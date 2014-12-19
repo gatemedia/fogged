@@ -7,7 +7,6 @@ module Fogged
 
     test "should confirm resource" do
       resource = fogged_resources(:resource_png)
-      FastImage.expects(:size).once.returns([800, 600])
 
       put :confirm, :id => resource, :use_route => :fogged
 

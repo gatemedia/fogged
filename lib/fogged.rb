@@ -40,7 +40,49 @@ module Fogged
     yield self
   end
 
+  def self.resources
+    return @@resources if @@resources
+    return @@resources = test_resources if Fogged.test_enabled
+
+    case Fogged.provider
+    when :aws
+      Fogged.resources = aws_resources
+    else
+      fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
+    end
+  end
+
   def self.test_mode!
     self.test_enabled = true
+  end
+
+  private
+
+  def self.test_resources
+    Fog.mock!
+    storage = Fog::Storage.new(
+      :provider => "AWS",
+      :aws_access_key_id => "1234567890",
+      :aws_secret_access_key => "1234567890"
+    )
+    @@aws_key = "1234567890"
+    @@aws_secret_access_key = "1234567890"
+    @@aws_bucket = "test"
+    storage.directories.create(:key => "test")
+  end
+
+  def self.aws_resources
+    fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
+    fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
+    fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
+    storage_options = {
+      :provider => "AWS",
+      :aws_access_key_id => Fogged.aws_key,
+      :aws_secret_access_key => Fogged.aws_secret
+    }
+    storage_options.merge!(:region => Fogged.aws_region) if Fogged.aws_region
+    storage = Fog::Storage.new(storage_options)
+
+    storage.directories.get(Fogged.aws_bucket)
   end
 end

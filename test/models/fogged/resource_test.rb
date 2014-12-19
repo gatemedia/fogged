@@ -49,7 +49,6 @@ module Fogged
 
     test "should process resource image" do
       @resource = fogged_resources(:resource_png)
-      FastImage.expects(:size).returns([800, 600])
 
       @resource.process!
       assert_equal 800, @resource.width

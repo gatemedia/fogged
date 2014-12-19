@@ -21,6 +21,7 @@ Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 # Load fixtures from the engine
 ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+Fogged.test_mode!
 
 class ActiveSupport::TestCase
   fixtures :all
