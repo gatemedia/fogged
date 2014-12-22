@@ -66,7 +66,7 @@ module Fogged
       :aws_secret_access_key => "1234567890"
     )
     @@aws_key = "1234567890"
-    @@aws_secret_access_key = "1234567890"
+    @@aws_secret = "1234567890"
     @@aws_bucket = "test"
     storage.directories.create(:key => "test")
   end
