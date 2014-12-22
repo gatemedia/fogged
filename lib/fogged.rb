@@ -62,11 +62,11 @@ module Fogged
     Fog.mock!
     storage = Fog::Storage.new(
       :provider => "AWS",
-      :aws_access_key_id => "1234567890",
-      :aws_secret_access_key => "1234567890"
+      :aws_access_key_id => "XXX",
+      :aws_secret_access_key => "XXX"
     )
-    @@aws_key = "1234567890"
-    @@aws_secret = "1234567890"
+    @@aws_key = "XXX"
+    @@aws_secret = "XXX"
     @@aws_bucket = "test"
     storage.directories.create(:key => "test")
   end
