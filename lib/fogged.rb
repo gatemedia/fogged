@@ -46,7 +46,6 @@ module Fogged
 
   def self.resources
     return @@resources if @@resources
-    return @@resources = test_resources if Fogged.test_enabled
 
     case Fogged.provider
     when :aws
@@ -58,6 +57,7 @@ module Fogged
 
   def self.test_mode!
     self.test_enabled = true
+    @@resources = test_resources
   end
 
   private
