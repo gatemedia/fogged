@@ -5,6 +5,7 @@ end
 require "fogged/engine"
 require "fogged/acts_as_having_one_resource"
 require "fogged/acts_as_having_many_resources"
+require "fogged/with_storage"
 
 module Fogged
   mattr_accessor :provider
@@ -15,6 +16,9 @@ module Fogged
 
   mattr_accessor :test_enabled
   @@test_enabled = false
+
+  mattr_accessor :storage
+  @@storage = nil
 
   # controller
   mattr_accessor :parent_controller
@@ -60,7 +64,7 @@ module Fogged
 
   def self.test_resources
     Fog.mock!
-    storage = Fog::Storage.new(
+    @@storage = Fog::Storage.new(
       :provider => "AWS",
       :aws_access_key_id => "XXX",
       :aws_secret_access_key => "XXX"
@@ -68,7 +72,7 @@ module Fogged
     @@aws_key = "XXX"
     @@aws_secret = "XXX"
     @@aws_bucket = "test"
-    storage.directories.create(:key => "test")
+    @@storage.directories.create(:key => "test")
   end
 
   def self.aws_resources
@@ -81,8 +85,8 @@ module Fogged
       :aws_secret_access_key => Fogged.aws_secret
     }
     storage_options.merge!(:region => Fogged.aws_region) if Fogged.aws_region
-    storage = Fog::Storage.new(storage_options)
+    @@storage = Fog::Storage.new(storage_options)
 
-    storage.directories.get(Fogged.aws_bucket)
+    @@storage.directories.get(Fogged.aws_bucket)
   end
 end

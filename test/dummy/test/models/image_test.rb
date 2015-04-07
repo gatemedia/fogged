@@ -21,4 +21,12 @@ class ImageTest < ActiveSupport::TestCase
 
     refute @image.update(:resource => resource)
   end
+
+  test "image url changing the storage name" do
+    @image.update!(:resource => fogged_resources(:resource_png))
+
+    Fogged.with_directory("directory_foobar") do
+      assert @image.resource.url.include?("directory_foobar")
+    end
+  end
 end
