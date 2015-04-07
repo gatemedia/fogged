@@ -12,7 +12,7 @@ Fogged has been implemented for:
 * Rails 4.x
 * Ruby 2.x but should work for Ruby 1.9
 
-However this gem is built agains:
+However this gem is built against:
 * ruby 1.9.3
 * ruby 2.0.0
 * ruby 2.1.3
@@ -112,12 +112,35 @@ end
 ### Controller
 A `Fogged::ResourcesController` is provided. It *does not* handle the creation of Resource with the upload if the content. This upload is left to the clients. See the docs.
 
+To install the controller routes, mount the `Fog::Engine` in your `routes.rb` file:
+```ruby
+# in routes.rb
+mount Fogged::Engine => "/"
+```
+
+This will mount the following routes:
+```shell
+    resources GET    /resources(.:format)             fogged/resources#index
+              POST   /resources(.:format)             fogged/resources#create
+     resource GET    /resources/:id(.:format)         fogged/resources#show
+              PATCH  /resources/:id(.:format)         fogged/resources#update
+              PUT    /resources/:id(.:format)         fogged/resources#update
+              DELETE /resources/:id(.:format)         fogged/resources#destroy
+              PUT    /resources/:id/confirm(.:format) fogged/resources#confirm
+```
+
+Of course you can decide to mount it in a sub url:
+```ruby
+# in routes.rb
+mount Fogged::Engine => "/files"
+```
+
 ### Serializer
 A `Fogged::ResourceSerializer` is provided. It is used by the `Fogged::ResourcesController` to serialize the `Fogged::Resource` object. If you are using Active Model Serializers in you project you can also reference it, to embed the `Fogged::Resource` into an other object.
 
 ## Dependencies
 
-Fogged use these libs:
+Fogged uses these libs:
 * [Fog](http://fog.io). See all the supported [providers](http://fog.io/about/provider_documentation.html)
 * [FastImage](https://github.com/sdsykes/fastimage)
 * [Active Model Serializers](https://github.com/rails-api/active_model_serializers)
