@@ -5,7 +5,7 @@ end
 require "fogged/engine"
 require "fogged/acts_as_having_one_resource"
 require "fogged/acts_as_having_many_resources"
-require "fogged/with_storage"
+require "fogged/with_directory"
 
 module Fogged
   mattr_accessor :provider
