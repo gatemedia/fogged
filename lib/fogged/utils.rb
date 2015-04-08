@@ -7,4 +7,8 @@ module Fogged
       fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
   end
+
+  def self.resources_public_url
+    directory_public_url(Fogged.resources.key)
+  end
 end
