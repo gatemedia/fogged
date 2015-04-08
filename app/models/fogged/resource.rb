@@ -77,6 +77,18 @@ module Fogged
       fogged_file.save
     end
 
+    def fogged_file
+      return @fogged_file if defined?(@fogged_file)
+
+      files = Fogged.resources.files
+      @fogged_file = files.get(fogged_name) || files.create(
+        :key => fogged_name,
+        :body => "",
+        :public => true,
+        :content_type => content_type
+      )
+    end
+
     private
 
     def find_size!
@@ -108,18 +120,6 @@ module Fogged
         a_token = SecureRandom.hex(16)
         break a_token unless Resource.find_by(:token => a_token)
       end
-    end
-
-    def fogged_file
-      return @fogged_file if defined?(@fogged_file)
-
-      files = Fogged.resources.files
-      @fogged_file = files.get(fogged_name) || files.create(
-        :key => fogged_name,
-        :body => "",
-        :public => true,
-        :content_type => content_type
-      )
     end
 
     def fogged_name
