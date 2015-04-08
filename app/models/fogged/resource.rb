@@ -29,12 +29,7 @@ module Fogged
     end
 
     def url
-      storage = Fogged.resources
-      storage.service.try(
-        :request_url,
-        :bucket_name => storage.key,
-        :object_name => fogged_name
-      )
+      Fogged.file_public_url(fogged_name)
     end
 
     def h264_url

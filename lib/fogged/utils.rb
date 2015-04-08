@@ -11,4 +11,12 @@ module Fogged
   def self.resources_public_url
     directory_public_url(Fogged.resources.key)
   end
+
+  def self.file_public_url(key, directory = Fogged.resources.key)
+    Fogged.storage.try(
+      :request_url,
+      :bucket_name => directory,
+      :object_name => key
+    )
+  end
 end
