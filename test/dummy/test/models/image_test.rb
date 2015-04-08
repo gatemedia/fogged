@@ -28,5 +28,6 @@ class ImageTest < ActiveSupport::TestCase
     Fogged.with_directory("directory_foobar") do
       assert @image.resource.url.include?("directory_foobar")
     end
+    refute @image.resource.url.include?("directory_foobar")
   end
 end
