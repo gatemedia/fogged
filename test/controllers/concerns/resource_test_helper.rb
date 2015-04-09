@@ -2,6 +2,12 @@ module ResourceTestHelper
   extend ActiveSupport::Concern
   include JsonTestHelper
 
+  included do
+    setup do
+      @routes = Fogged::Engine.routes
+    end
+  end
+
   private
 
   def assert_json_resource(resource)

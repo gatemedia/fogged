@@ -13,8 +13,7 @@ module Fogged
     test "should update resource" do
       put :update,
           :id => @resource,
-          :resource => { :name => "Update" },
-          :use_route => :fogged
+          :resource => { :name => "Update" }
 
       assert_json_resource(@resource.reload)
     end
@@ -23,8 +22,7 @@ module Fogged
       assert_raise(ActiveRecord::RecordNotFound) do
         put :update,
             :id => 1234567890,
-            :resource => { :name => "Update" },
-            :use_route => :fogged
+            :resource => { :name => "Update" }
       end
     end
   end

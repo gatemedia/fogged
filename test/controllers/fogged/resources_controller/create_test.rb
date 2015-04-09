@@ -16,7 +16,7 @@ module Fogged
 
     test "should create resource" do
       assert_difference("Resource.count") do
-        post :create, :resource => @resource_params, :use_route => :fogged
+        post :create, :resource => @resource_params
       end
 
       assert_json_resource(Resource.last)
@@ -26,7 +26,7 @@ module Fogged
     test "should not create resource without resource parameter" do
       assert_no_difference("Resource.count") do
         assert_raise(ActionController::ParameterMissing) do
-          post :create, :use_route => :fogged
+          post :create
         end
       end
     end
@@ -36,8 +36,7 @@ module Fogged
         assert_no_difference("Resource.count") do
           assert_raise(ActionController::ParameterMissing) do
             post :create,
-                 :resource => @resource_params.merge(field => ""),
-                 :use_route => :fogged
+                 :resource => @resource_params.merge(field => "")
           end
         end
       end
@@ -47,8 +46,7 @@ module Fogged
       assert_no_difference("Resource.count") do
         assert_raise(ActiveRecord::RecordInvalid) do
           post :create,
-               :resource => @resource_params.merge(:filename => "bar"),
-               :use_route => :fogged
+               :resource => @resource_params.merge(:filename => "bar")
         end
       end
     end

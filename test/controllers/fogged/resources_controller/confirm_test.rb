@@ -8,7 +8,7 @@ module Fogged
     test "should confirm resource" do
       resource = fogged_resources(:resource_png)
 
-      put :confirm, :id => resource, :use_route => :fogged
+      put :confirm, :id => resource
 
       assert_json_resource(resource.reload)
       assert_equal 800, resource.width
@@ -29,7 +29,7 @@ module Fogged
         resource = fogged_resources(:resource_mov)
 
         assert_difference("Delayed::Job.count") do
-          put :confirm, :id => resource, :use_route => :fogged
+          put :confirm, :id => resource
         end
 
         assert_json_resource(resource.reload)
@@ -40,7 +40,7 @@ module Fogged
 
     test "should not confirm resource with invalid id" do
       assert_raise(ActiveRecord::RecordNotFound) do
-        put :confirm, :id => 123456, :use_route => :fogged
+        put :confirm, :id => 123456
       end
     end
 

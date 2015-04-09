@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20141105073909) do
 
-  create_table "delayed_jobs", force: true do |t|
+  create_table "delayed_jobs", force: :cascade do |t|
     t.integer  "priority",   default: 0, null: false
     t.integer  "attempts",   default: 0, null: false
     t.text     "handler",                null: false
@@ -29,7 +29,7 @@ ActiveRecord::Schema.define(version: 20141105073909) do
 
   add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority"
 
-  create_table "fogged_resources", force: true do |t|
+  create_table "fogged_resources", force: :cascade do |t|
     t.string   "name",              null: false
     t.string   "token",             null: false
     t.integer  "width"
@@ -46,14 +46,14 @@ ActiveRecord::Schema.define(version: 20141105073909) do
 
   add_index "fogged_resources", ["token"], name: "index_fogged_resources_on_token"
 
-  create_table "images", force: true do |t|
+  create_table "images", force: :cascade do |t|
     t.string   "name"
     t.integer  "resource_id"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
-  create_table "movie_fogged_resources", force: true do |t|
+  create_table "movie_fogged_resources", force: :cascade do |t|
     t.integer  "movie_id"
     t.integer  "resource_id"
     t.datetime "created_at"
@@ -63,7 +63,7 @@ ActiveRecord::Schema.define(version: 20141105073909) do
   add_index "movie_fogged_resources", ["movie_id"], name: "index_movie_fogged_resources_on_movie_id"
   add_index "movie_fogged_resources", ["resource_id"], name: "index_movie_fogged_resources_on_resource_id"
 
-  create_table "movies", force: true do |t|
+  create_table "movies", force: :cascade do |t|
     t.string   "name"
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -7,20 +7,23 @@ SimpleCov.start "rails"
 require "minitest/reporters"
 Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new)
 
-require File.expand_path("../dummy/config/environment.rb",  __FILE__)
+require File.expand_path("../../test/dummy/config/environment.rb",  __FILE__)
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __FILE__)]
+ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
+
 require "rails/test_help"
 require "mocha/mini_test"
 
-Rails.backtrace_cleaner.remove_silencers!
-
-# Run any available migration from dummy app
-ActiveRecord::Migrator.migrate File.expand_path("../dummy/db/migrate/", __FILE__)
+Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
 # Load support files
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each { |f| require f }
 
 # Load fixtures from the engine
-ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+if ActiveSupport::TestCase.respond_to?(:fixture_path=)
+  ActiveSupport::TestCase.fixture_path = File.expand_path("../fixtures", __FILE__)
+  ActiveSupport::TestCase.fixtures :all
+end
 Fogged.test_mode!
 
 class ActiveSupport::TestCase
