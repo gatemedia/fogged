@@ -89,8 +89,6 @@ module Fogged
       )
     end
 
-    private
-
     def find_size!
       if Fogged.test_enabled
         update!(
@@ -110,6 +108,8 @@ module Fogged
       return unless Fogged.zencoder_enabled
       Resources::Encoder.for(self).encode!
     end
+
+    private
 
     def ensure_token
       self.token = generate_token if token.blank?
