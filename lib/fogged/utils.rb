@@ -19,4 +19,8 @@ module Fogged
       :object_name => key
     )
   end
+
+  def self.file_exists?(key)
+    Fogged.resources.files.head(key)
+  end
 end
