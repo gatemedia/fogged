@@ -6,7 +6,7 @@ module Fogged
       end
 
       def self.provider_for(resource)
-        return :AWS if resource.send(:fogged_file).class.to_s.include?("AWS")
+        return :AWS if resource.fogged_file.class.to_s.include?("AWS")
       end
     end
   end

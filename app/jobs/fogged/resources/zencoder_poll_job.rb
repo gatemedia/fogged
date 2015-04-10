@@ -2,6 +2,7 @@ module Fogged
   module Resources
     class ZencoderPollJob < Struct.new(:resource_id)
       def perform
+        return unless Fogged.zencoder_enabled
         @resource = Fogged::Resource.find(resource_id)
         update_encoding_progress
 

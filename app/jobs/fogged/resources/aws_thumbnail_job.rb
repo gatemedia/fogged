@@ -1,7 +1,8 @@
 module Fogged
   module Resources
-    class AWSThumbnailJob < Struct.new(:resource_id, :size, :target_key)
+    class AWSThumbnailJob < Struct.new(:resource_id, :size, :key)
       def perform
+        return unless Fogged.minimagick_enabled
         @resource = Fogged::Resource.find(resource_id)
 
         Tempfile.open(["thumbnail", ".png"]) do |t|
@@ -14,9 +15,9 @@ module Fogged
           end
 
           Fogged.resources.files.create(
-            :key => fogged_name,
+            :key => key,
             :body => File.read(t.path),
-            :public => @resource.public,
+            :public => true,
             :content_type => Mime::PNG.to_s
           )
         end

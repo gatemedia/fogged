@@ -33,3 +33,10 @@ encoding_resource:
   token: 1234567890mov
   encoding_job_id: 1234567890
   encoding_progress: 10
+
+resource_thumbnail:
+  extension: png
+  uploading: false
+  content_type: image/png
+  name: resource png thumbnail
+  token: pngthumbnail

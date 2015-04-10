@@ -67,7 +67,7 @@ module Fogged
       end
 
       def bucket
-        resource.send(:fogged_file).directory.key
+        resource.fogged_file.directory.key
       end
 
       def fogged_name_for(type, number = 0)

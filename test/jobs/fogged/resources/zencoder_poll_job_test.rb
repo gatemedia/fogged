@@ -13,6 +13,7 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
+          Fogged.configure
 
           Zencoder::Job.expects(:progress).with("1234567890").returns(
             OpenStruct.new(:body => progress_output("finished"))
@@ -36,6 +37,7 @@ module Fogged
           in_a_fork do
             require "zencoder"
             require "delayed_job_active_record"
+            Fogged.configure
 
             Zencoder::Job.expects(:progress).with("1234567890").returns(
               OpenStruct.new(:body => progress_output(status))
@@ -54,6 +56,7 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
+          Fogged.configure
 
           Zencoder::Job.expects(:progress).with("1234567890").returns(
             OpenStruct.new(:body => progress_output("unknown"))
