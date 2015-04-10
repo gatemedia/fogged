@@ -24,7 +24,7 @@ class ImageTest < ActiveSupport::TestCase
 
   test "image url changing the storage name" do
     d = "foobar"
-    @image.update!(:resource => fogged_resources(:resource_png))
+    @image.update!(:resource => fogged_resources(:resource_png_1))
     Fogged.storage.directories.create(:key => d)
 
     url = Fogged.with_directory(d) { @image.resource.url }

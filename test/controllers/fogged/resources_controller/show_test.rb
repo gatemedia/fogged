@@ -13,14 +13,14 @@ module Fogged
     end
 
     test "should show video resource" do
-      resource = fogged_resources(:resource_mov)
+      resource = fogged_resources(:resource_mov_1)
       get :show, :id => resource
 
       assert_json_resource(resource)
     end
 
     test "should show image resource" do
-      resource = fogged_resources(:resource_png)
+      resource = fogged_resources(:resource_png_1)
       get :show, :id => resource
 
       assert_json_resource(resource)

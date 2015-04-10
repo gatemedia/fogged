@@ -33,24 +33,31 @@ module Fogged
     end
 
     def h264_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:h264))
     end
 
     def mpeg_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:mpeg))
     end
 
     def webm_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:webm))
     end
 
     def thumbnail_urls
-      return unless video?
-      5.times.map do |n|
-        url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+      return unless Fogged.delayed_job_enabled
+      if video? && Fogged.zencoder_enabled
+        5.times.map do |n|
+          url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+        end
+      end
+      if image? && Fogged.minimagick_enabled
+        Fogged.thumbnail_sizes.size.times.map do |n|
+          url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+        end
       end
     end
 
@@ -69,7 +76,7 @@ module Fogged
 
     def process!
       find_size! if image?
-      encode! if video?
+      encode!
     end
 
     def write(content)
@@ -91,21 +98,19 @@ module Fogged
 
     def find_size!
       if Fogged.test_enabled
-        update!(
+        return update!(
           :width => 800,
           :height => 600
         )
-      else
-        size = FastImage.size(url)
-        update!(
-          :width => size.first,
-          :height => size.second
-        ) unless size.blank?
       end
+      size = FastImage.size(url)
+      update!(
+        :width => size.first,
+        :height => size.second
+      ) unless size.blank?
     end
 
     def encode!
-      return unless Fogged.zencoder_enabled
       Resources::Encoder.for(self).encode!
     end
 

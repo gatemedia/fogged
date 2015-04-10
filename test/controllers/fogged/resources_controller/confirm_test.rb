@@ -6,7 +6,7 @@ module Fogged
     include ResourceTestHelper
 
     test "should confirm resource" do
-      resource = fogged_resources(:resource_png)
+      resource = fogged_resources(:resource_png_1)
 
       put :confirm, :id => resource
 
@@ -20,13 +20,12 @@ module Fogged
       in_a_fork do
         require "zencoder"
         require "delayed_job_active_record"
-
-        Fogged.zencoder_enabled = true
+        Fogged.configure
 
         Zencoder::Job.expects(:create).returns(
           OpenStruct.new(:body => create_output)
         )
-        resource = fogged_resources(:resource_mov)
+        resource = fogged_resources(:resource_mov_1)
 
         assert_difference("Delayed::Job.count") do
           put :confirm, :id => resource

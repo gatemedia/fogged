@@ -36,13 +36,23 @@ module Fogged
   @@aws_region = nil
 
   # zencoder
-  mattr_accessor :zencoder_enabled
-  @@zencoder_enabled = false
   mattr_accessor :zencoder_polling_frequency
   @@zencoder_polling_frequency = 10
 
+  # thumbnail sizes
+  mattr_accessor :thumbnail_sizes
+  @@thumbnail_sizes = []
+
+  # libs support
+  mattr_accessor :zencoder_enabled, :minimagick_enabled, :delayed_job_enabled do
+    false
+  end
+
   def self.configure
-    yield self
+    yield self if block_given?
+    self.zencoder_enabled = defined?(Zencoder)
+    self.minimagick_enabled = defined?(MiniMagick)
+    self.delayed_job_enabled = defined?(Delayed::Job)
   end
 
   def self.resources

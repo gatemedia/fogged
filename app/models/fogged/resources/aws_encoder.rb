@@ -2,14 +2,28 @@ module Fogged
   module Resources
     class AWSEncoder < Struct.new(:resource)
       def encode!
+        return unless Fogged.delayed_job_enabled
         encode_video if resource.video?
+        encode_image if resource.image?
       end
 
       private
 
+      def encode_image
+        return unless Fogged.minimagick_enabled
+        Fogged.thumbnail_sizes.each_with_index do |size, index|
+          Delayed::Job.enqueue(
+            AWSThumbnailJob.new(
+              resource.id,
+              size,
+              fogged_name_for(:thumbnails, index)
+            )
+          )
+        end
+      end
+
       def encode_video
-        fail(ArgumentError, "Zencoder gem needed") unless defined?(Zencoder)
-        fail(ArgumentError, "Delayed Job gem needed") unless defined?(Delayed::Job)
+        return unless Fogged.zencoder_enabled
 
         job = Zencoder::Job.create(
           :input => resource.url,
@@ -56,8 +70,8 @@ module Fogged
         resource.send(:fogged_file).directory.key
       end
 
-      def fogged_name_for(type)
-        resource.send(:fogged_name_for, type)
+      def fogged_name_for(type, number = 0)
+        resource.send(:fogged_name_for, type, number)
       end
     end
   end

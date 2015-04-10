@@ -29,4 +29,5 @@ Gem::Specification.new do |s|
   s.add_development_dependency "simplecov", "~> 0.8"
   s.add_development_dependency "zencoder", "~> 2.5"
   s.add_development_dependency "delayed_job_active_record", "~> 4.0"
+  s.add_development_dependency "mini_magick", "~> 4.2.1"
 end

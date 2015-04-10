@@ -7,7 +7,7 @@ module Fogged
 
     def setup
       super
-      @resource = fogged_resources(:resource_png)
+      @resource = fogged_resources(:resource_png_1)
     end
 
     test "should update resource" do
