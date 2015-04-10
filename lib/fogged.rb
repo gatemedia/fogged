@@ -40,6 +40,7 @@ module Fogged
 
   def self.configure
     yield self if block_given?
+    check_config
     self.zencoder_enabled = defined?(Zencoder)
     self.minimagick_enabled = defined?(MiniMagick)
     self.delayed_job_enabled = defined?(Delayed::Job)
@@ -77,9 +78,6 @@ module Fogged
   end
 
   def self.aws_resources
-    fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
-    fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
-    fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
     storage_options = {
       :provider => "AWS",
       :aws_access_key_id => Fogged.aws_key,
@@ -89,5 +87,16 @@ module Fogged
     Fogged.storage = Fog::Storage.new(storage_options)
 
     Fogged.storage.directories.get(Fogged.aws_bucket)
+  end
+
+  def self.check_config
+    case Fogged.provider
+    when :aws
+      fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
+      fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
+      fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
+    else
+      fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
+    end
   end
 end
