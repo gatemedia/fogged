@@ -66,9 +66,25 @@ Fogged.test_mode! if Rails.env.test?
 * `aws_region`: The AWS region. Optional.
 
 ## Optional support
+### Zencoder
 Fogged supports any type of resource. However, for video resources, Fogged provides a support for [Zencoder](https://zencoder.com/en/). When creating a new video, Fogged will enqueue a new job on Zencoder to create several thumbnails and several web compatible videos(namely a MPEG, H264 and WEBM).
 
 To use this, just add the `zencoder` and the `delayed_job_active_record` gems in your application and Fogged will pick it up.
+
+### Image thumbnails
+Fogged can auto create thumbnails for images. For this, you'll to need to have `mini_magick` and `delayed_job_active_record` installed.
+
+To configure the desired sizes, in the `Fogged.configure` block, use `thumbnail_sizes`:
+```ruby
+Fogged.configure do |config|
+  # ...
+  thumbnail_sizes = %w(50x50 150x150)
+end
+```
+
+When processing an image, Fogged will enqueue as many jobs as necessary to create each thumbnail.
+
+The thumbnail urls can be retrieved, using `Fogged::Resource#thumbnail_urls`.
 
 ## How to use it
 
