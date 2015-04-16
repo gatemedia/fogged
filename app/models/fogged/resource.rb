@@ -49,12 +49,13 @@ module Fogged
 
     def thumbnail_urls
       return unless Fogged.delayed_job_enabled
-      if video? && Fogged.zencoder_enabled
+
+      case
+      when video? && Fogged.zencoder_enabled
         5.times.map do |n|
           url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
         end
-      end
-      if image? && Fogged.minimagick_enabled
+      when image? && Fogged.minimagick_enabled
         Fogged.thumbnail_sizes.size.times.map do |n|
           url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
         end
