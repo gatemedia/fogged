@@ -17,6 +17,7 @@ However this gem is built against:
 * ruby 2.0.0
 * ruby 2.1.3
 * ruby 2.2.0
+* ruby 2.2.2
 
 ## Installation
 
