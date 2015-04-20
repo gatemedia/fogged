@@ -69,6 +69,7 @@ module Fogged
       in_a_fork do
         require "zencoder"
         require "delayed_job_active_record"
+        Rails.application.config.active_job.queue_adapter = :delayed_job
         Fogged.configure
 
         @resource = fogged_resources(:resource_mov_1)

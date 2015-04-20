@@ -48,7 +48,7 @@ module Fogged
     end
 
     def thumbnail_urls
-      return unless Fogged.delayed_job_enabled
+      return unless Fogged.active_job_enabled
 
       case
       when video? && Fogged.zencoder_enabled

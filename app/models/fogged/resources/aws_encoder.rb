@@ -2,7 +2,7 @@ module Fogged
   module Resources
     class AWSEncoder < Struct.new(:resource)
       def encode!
-        return unless Fogged.delayed_job_enabled
+        return unless Fogged.active_job_enabled
         encode_video if resource.video?
         encode_image if resource.image?
       end

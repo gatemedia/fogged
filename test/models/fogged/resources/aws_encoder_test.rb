@@ -21,6 +21,7 @@ module Fogged
 
         in_a_fork do
           require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
           assert_no_difference("Delayed::Job.count") do
@@ -39,6 +40,7 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
           Zencoder::Job.expects(:create).returns(
@@ -87,8 +89,9 @@ module Fogged
         encoder = AWSEncoder.new(resource)
 
         in_a_fork do
-          require "delayed_job_active_record"
           require "mini_magick"
+          require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
           Fogged.thumbnail_sizes = %w(50x50 60x60)
 

@@ -34,7 +34,7 @@ module Fogged
   end
 
   # libs support
-  mattr_accessor :zencoder_enabled, :minimagick_enabled, :delayed_job_enabled do
+  mattr_accessor :zencoder_enabled, :minimagick_enabled, :active_job_enabled do
     false
   end
 
@@ -43,7 +43,7 @@ module Fogged
     check_config
     self.zencoder_enabled = defined?(Zencoder)
     self.minimagick_enabled = defined?(MiniMagick)
-    self.delayed_job_enabled = defined?(Delayed::Job)
+    self.active_job_enabled = (Rails.application.config.active_job.queue_adapter != :inline)
   end
 
   def self.resources
