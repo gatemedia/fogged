@@ -12,12 +12,12 @@ module Fogged
       test "should thumbnail the image" do
         in_a_fork do
           require "mini_magick"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
           Resource.any_instance.expects(:url).twice.returns("http://lorempixel.com/800/600/cats")
-          job = AWSThumbnailJob.new(@resource.id)
 
-          job.perform
+          AWSThumbnailJob.perform_now(@resource)
 
           Fogged.thumbnail_sizes.each_with_index do |size, index|
             key = @resource.send(:fogged_name_for, :thumbnails, index)
@@ -37,13 +37,13 @@ module Fogged
       test "should not thumbnail with unknown image" do
         in_a_fork do
           require "mini_magick"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
           Resource.any_instance.expects(:url).returns("http://localhost:7777/image")
-          job = AWSThumbnailJob.new(@resource.id)
 
           assert_raise(MiniMagick::Error) do
-            job.perform
+            AWSThumbnailJob.perform_now(@resource)
           end
         end
       end

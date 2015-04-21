@@ -11,10 +11,8 @@ module Fogged
 
       def encode_image
         return unless Fogged.minimagick_enabled
-        Delayed::Job.enqueue(AWSThumbnailJob.new(resource.id))
-        resource.update!(
-          :encoding_progress => 0
-        )
+        AWSThumbnailJob.perform_later(resource)
+        resource.update!(:encoding_progress => 0)
       end
 
       def encode_video
@@ -31,7 +29,7 @@ module Fogged
           :encoding_progress => 0
         )
 
-        Delayed::Job.enqueue(ZencoderPollJob.new(resource.id))
+        ZencoderPollJob.perform_later(resource)
       end
 
       def output
