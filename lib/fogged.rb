@@ -3,8 +3,8 @@ Gem.loaded_specs["fogged"].dependencies.select { |d| d.type == :runtime }.each d
 end
 
 require "fogged/engine"
-require "fogged/acts_as_having_one_resource"
-require "fogged/acts_as_having_many_resources"
+require "fogged/has_one_resource"
+require "fogged/has_many_resources"
 require "fogged/with_directory"
 require "fogged/utils"
 
