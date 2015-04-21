@@ -71,7 +71,10 @@ module Fogged
     end
 
     def encoding?
-      return false unless video? && encoding_progress.present?
+      unless encoding_progress.present? &&
+             (video? || (image? && Fogged.active_job_enabled))
+        return
+      end
       encoding_progress < 100
     end
 

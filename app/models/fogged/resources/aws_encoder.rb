@@ -11,15 +11,10 @@ module Fogged
 
       def encode_image
         return unless Fogged.minimagick_enabled
-        Fogged.thumbnail_sizes.each_with_index do |size, index|
-          Delayed::Job.enqueue(
-            AWSThumbnailJob.new(
-              resource.id,
-              size,
-              fogged_name_for(:thumbnails, index)
-            )
-          )
-        end
+        Delayed::Job.enqueue(AWSThumbnailJob.new(resource.id))
+        resource.update!(
+          :encoding_progress => 0
+        )
       end
 
       def encode_video

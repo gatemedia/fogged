@@ -40,3 +40,4 @@ resource_thumbnail:
   content_type: image/png
   name: resource png thumbnail
   token: pngthumbnail
+  encoding_progress: 0

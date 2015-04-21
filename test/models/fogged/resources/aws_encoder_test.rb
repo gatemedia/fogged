@@ -95,9 +95,11 @@ module Fogged
           Fogged.configure
           Fogged.thumbnail_sizes = %w(50x50 60x60)
 
-          assert_difference("Delayed::Job.count", 2) do
+          assert_difference("Delayed::Job.count") do
             encoder.encode!
           end
+          assert resource.encoding?
+          assert_equal 0, resource.encoding_progress
         end
       end
 
