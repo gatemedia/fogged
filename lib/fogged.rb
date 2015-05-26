@@ -7,6 +7,7 @@ require "fogged/has_one_resource"
 require "fogged/has_many_resources"
 require "fogged/with_directory"
 require "fogged/utils"
+require "fogged/zencoder_additional_outputs"
 
 module Fogged
   mattr_accessor :provider, :_resources, :storage

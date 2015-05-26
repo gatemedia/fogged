@@ -103,6 +103,40 @@ module Fogged
         end
       end
 
+      test "should encode video with additional outputs" do
+        resource = fogged_resources(:resource_mov_3)
+        encoder = AWSEncoder.new(resource)
+
+        in_a_fork do
+          require "zencoder"
+          require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
+          Fogged.configure do |config|
+            config.zencoder_additional_outputs do |bucket, res|
+              [
+                {
+                  :url => "s3://#{bucket}/#{res.token}-custom1.mp4",
+                  :video_codec => "mpeg4",
+                  :quality => 1,
+                  :public => 1
+                }
+              ]
+            end
+          end
+
+          Zencoder::Job.expects(:create).with { |options| assert_equal 4, options[:output].size }.returns(
+            OpenStruct.new(:body => create_output)
+          )
+          assert_difference("Delayed::Job.count") do
+            encoder.encode!
+          end
+
+          assert resource.encoding?
+          assert_equal 0, resource.encoding_progress
+          assert_equal "1234567890", resource.encoding_job_id
+        end
+      end
+
       private
 
       def create_output
