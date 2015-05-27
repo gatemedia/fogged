@@ -72,6 +72,29 @@ Fogged supports any type of resource. However, for video resources, Fogged provi
 
 To use this, just add the `zencoder` gem and any ActiveJob backend (eg. `delayed_job`) in your application and Fogged will pick it up.
 
+### Zencoder custom outputs
+By default, Fogged will create 3 outputs: h264, mp4 and webm. In addition, 5 thumbnails will be created. You can instruct Fogged to create more outputs. To do so, simply use the `zencoder_additional_outputs` hook in the config to register additionnal outputs:
+
+```ruby
+# file: config/initializers/fogged.rb
+Fogged.configure do |config|
+  config.provider = :aws
+  # ...
+  config.zencoder_additional_outputs do |bucket, resource|
+    # bucket is the target bucket name
+    # resource is the current resource object for which a zencoder will be
+    # created.
+    {
+      :url => "s3://#{bucket}/#{resource.token}-my_custom_output.ogv",
+      :public => 1,
+      :video_codec => "theora"
+    }
+  end
+end
+```
+
+The block from the hook *must* return a hash or an array of hash with the expected properties for the field `outputs` on the Zencoder API. See the Zencoder [docs](https://app.zencoder.com/docs/api/encoding/general-output-settings) for more information.
+
 ### Image thumbnails
 Fogged can auto create thumbnails for images. For this, you'll to need to have the `mini_magick` gem and any ActiveJob backend installed.
 
