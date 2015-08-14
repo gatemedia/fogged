@@ -99,6 +99,5 @@ module Fogged
     else
       fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
-    Fogged.resources
   end
 end
