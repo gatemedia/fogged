@@ -9,13 +9,15 @@ It provides a model, a controller and other Rails utils.
 
 ## Prerequisites
 Fogged has been implemented for:
-* Rails 4.x
+* Rails 4.2.x
 * Ruby 2.x but should work for Ruby 1.9
 
-However this gem is built agains:
+However this gem is built against:
 * ruby 1.9.3
 * ruby 2.0.0
 * ruby 2.1.3
+* ruby 2.2.0
+* ruby 2.2.2
 
 ## Installation
 
@@ -65,9 +67,48 @@ Fogged.test_mode! if Rails.env.test?
 * `aws_region`: The AWS region. Optional.
 
 ## Optional support
+### Zencoder
 Fogged supports any type of resource. However, for video resources, Fogged provides a support for [Zencoder](https://zencoder.com/en/). When creating a new video, Fogged will enqueue a new job on Zencoder to create several thumbnails and several web compatible videos(namely a MPEG, H264 and WEBM).
 
-To use this, just add the `zencoder` and the `delayed_job_active_record` gems in your application and Fogged will pick it up.
+To use this, just add the `zencoder` gem and any ActiveJob backend (eg. `delayed_job`) in your application and Fogged will pick it up.
+
+### Zencoder custom outputs
+By default, Fogged will create 3 outputs: h264, mp4 and webm. In addition, 5 thumbnails will be created. You can instruct Fogged to create more outputs. To do so, simply use the `zencoder_additional_outputs` hook in the config to register additionnal outputs:
+
+```ruby
+# file: config/initializers/fogged.rb
+Fogged.configure do |config|
+  config.provider = :aws
+  # ...
+  config.zencoder_additional_outputs do |bucket, resource|
+    # bucket is the target bucket name
+    # resource is the current resource object for which a zencoder will be
+    # created.
+    {
+      :url => "s3://#{bucket}/#{resource.token}-my_custom_output.ogv",
+      :public => 1,
+      :video_codec => "theora"
+    }
+  end
+end
+```
+
+The block from the hook *must* return a hash or an array of hash with the expected properties for the field `outputs` on the Zencoder API. See the Zencoder [docs](https://app.zencoder.com/docs/api/encoding/general-output-settings) for more information.
+
+### Image thumbnails
+Fogged can auto create thumbnails for images. For this, you'll to need to have the `mini_magick` gem and any ActiveJob backend installed.
+
+To configure the desired sizes, in the `Fogged.configure` block, use `thumbnail_sizes`:
+```ruby
+Fogged.configure do |config|
+  # ...
+  thumbnail_sizes = %w(50x50 150x150)
+end
+```
+
+When processing an image, Fogged will enqueue as many jobs as necessary to create each thumbnail.
+
+The thumbnail urls can be retrieved, using `Fogged::Resource#thumbnail_urls`.
 
 ## How to use it
 
@@ -112,12 +153,35 @@ end
 ### Controller
 A `Fogged::ResourcesController` is provided. It *does not* handle the creation of Resource with the upload if the content. This upload is left to the clients. See the docs.
 
+To install the controller routes, mount the `Fog::Engine` in your `routes.rb` file:
+```ruby
+# in routes.rb
+mount Fogged::Engine => "/"
+```
+
+This will mount the following routes:
+```shell
+    resources GET    /resources(.:format)             fogged/resources#index
+              POST   /resources(.:format)             fogged/resources#create
+     resource GET    /resources/:id(.:format)         fogged/resources#show
+              PATCH  /resources/:id(.:format)         fogged/resources#update
+              PUT    /resources/:id(.:format)         fogged/resources#update
+              DELETE /resources/:id(.:format)         fogged/resources#destroy
+              PUT    /resources/:id/confirm(.:format) fogged/resources#confirm
+```
+
+Of course you can decide to mount it in a sub url:
+```ruby
+# in routes.rb
+mount Fogged::Engine => "/files"
+```
+
 ### Serializer
 A `Fogged::ResourceSerializer` is provided. It is used by the `Fogged::ResourcesController` to serialize the `Fogged::Resource` object. If you are using Active Model Serializers in you project you can also reference it, to embed the `Fogged::Resource` into an other object.
 
 ## Dependencies
 
-Fogged use these libs:
+Fogged uses these libs:
 * [Fog](http://fog.io). See all the supported [providers](http://fog.io/about/provider_documentation.html)
 * [FastImage](https://github.com/sdsykes/fastimage)
 * [Active Model Serializers](https://github.com/rails-api/active_model_serializers)

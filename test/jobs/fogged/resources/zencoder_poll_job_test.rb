@@ -6,13 +6,14 @@ module Fogged
       def setup
         super
         @resource = fogged_resources(:encoding_resource)
-        @job = ZencoderPollJob.new(@resource.id)
       end
 
       test "should poll job with status success" do
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
+          Fogged.configure
 
           Zencoder::Job.expects(:progress).with("1234567890").returns(
             OpenStruct.new(:body => progress_output("finished"))
@@ -22,7 +23,7 @@ module Fogged
           )
 
           assert_no_difference("Delayed::Job.count") do
-            @job.perform
+            ZencoderPollJob.perform_now(@resource)
           end
           refute @resource.reload.encoding?
           assert_equal 800, @resource.width
@@ -36,13 +37,15 @@ module Fogged
           in_a_fork do
             require "zencoder"
             require "delayed_job_active_record"
+            Rails.application.config.active_job.queue_adapter = :delayed_job
+            Fogged.configure
 
             Zencoder::Job.expects(:progress).with("1234567890").returns(
               OpenStruct.new(:body => progress_output(status))
             )
 
             assert_difference("Delayed::Job.count") do
-              @job.perform
+              ZencoderPollJob.perform_now(@resource)
             end
             assert @resource.reload.encoding?
             assert_equal 55, @resource.encoding_progress
@@ -54,6 +57,7 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
+          Fogged.configure
 
           Zencoder::Job.expects(:progress).with("1234567890").returns(
             OpenStruct.new(:body => progress_output("unknown"))
@@ -61,7 +65,7 @@ module Fogged
 
           assert_raise(ArgumentError) do
             assert_no_difference("Delayed::Job.count") do
-              @job.perform
+              ZencoderPollJob.perform_now(@resource)
             end
           end
         end

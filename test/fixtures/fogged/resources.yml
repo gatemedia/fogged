@@ -7,19 +7,23 @@ resource_text_<%= n %>:
   token: qwertzuiop<%= n %>
 <% end %>
 
-resource_mov:
+<% 5.times do |n| %>
+resource_mov_<%= n %>:
   extension: mov
   uploading: false
   content_type: video/quicktime
-  name: resource mov 1
-  token: 1234567890mov
+  name: resource mov <%= n %>
+  token: mov<%= n %>
+<% end %>
 
-resource_png:
+<% 5.times do |n| %>
+resource_png_<%= n %>:
   extension: png
   uploading: false
   content_type: image/png
-  name: resource png 1
-  token: 1234567890png
+  name: resource png <%= n %>
+  token: png<%= n %>
+<% end %>
 
 encoding_resource:
   extension: mov
@@ -29,3 +33,11 @@ encoding_resource:
   token: 1234567890mov
   encoding_job_id: 1234567890
   encoding_progress: 10
+
+resource_thumbnail:
+  extension: png
+  uploading: false
+  content_type: image/png
+  name: resource png thumbnail
+  token: pngthumbnail
+  encoding_progress: 0

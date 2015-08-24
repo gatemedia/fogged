@@ -1,5 +1,5 @@
 module Fogged
-  module ActsAsHavingManyResources
+  module HasManyResources
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -8,7 +8,7 @@ module Fogged
         :class_name => "Fogged::Resource"
       }
 
-      def acts_as_having_many_resources(*args)
+      def has_many_resources(*args)
         options = args.extract_options!
         unless options.include?(:through)
           fail(ArgumentError, ":through option is mandatory")
@@ -27,4 +27,4 @@ module Fogged
   end
 end
 
-ActiveRecord::Base.send(:include, Fogged::ActsAsHavingManyResources)
+ActiveRecord::Base.send(:include, Fogged::HasManyResources)

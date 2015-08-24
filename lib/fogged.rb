@@ -3,86 +3,101 @@ Gem.loaded_specs["fogged"].dependencies.select { |d| d.type == :runtime }.each d
 end
 
 require "fogged/engine"
-require "fogged/acts_as_having_one_resource"
-require "fogged/acts_as_having_many_resources"
+require "fogged/has_one_resource"
+require "fogged/has_many_resources"
+require "fogged/with_directory"
+require "fogged/utils"
+require "fogged/zencoder_additional_outputs"
 
 module Fogged
-  mattr_accessor :provider
-  @@provider = nil
+  mattr_accessor :provider, :_resources, :storage
 
-  mattr_accessor :resources
-  @@resources = nil
-
-  mattr_accessor :test_enabled
-  @@test_enabled = false
+  mattr_accessor :test_enabled do
+    false
+  end
 
   # controller
-  mattr_accessor :parent_controller
-  @@parent_controller = "ApplicationController"
+  mattr_accessor :parent_controller do
+    "ApplicationController"
+  end
 
   # aws
-  mattr_accessor :aws_key
-  @@aws_key = nil
-  mattr_accessor :aws_secret
-  @@aws_secret = nil
-  mattr_accessor :aws_bucket
-  @@aws_bucket = nil
-  mattr_accessor :aws_region
-  @@aws_region = nil
+  mattr_accessor :aws_key, :aws_secret, :aws_bucket, :aws_region
 
   # zencoder
-  mattr_accessor :zencoder_enabled
-  @@zencoder_enabled = false
-  mattr_accessor :zencoder_polling_frequency
-  @@zencoder_polling_frequency = 10
+  mattr_accessor :zencoder_polling_frequency do
+    10
+  end
+
+  # thumbnail sizes
+  mattr_accessor :thumbnail_sizes do
+    []
+  end
+
+  # libs support
+  mattr_accessor :zencoder_enabled, :minimagick_enabled, :active_job_enabled do
+    false
+  end
 
   def self.configure
-    yield self
+    yield self if block_given?
+    check_config
+    self.zencoder_enabled = defined?(Zencoder)
+    self.minimagick_enabled = defined?(MiniMagick)
+    self.active_job_enabled = (Rails.application.config.active_job.queue_adapter != :inline)
   end
 
   def self.resources
-    return @@resources if @@resources
-    return @@resources = test_resources if Fogged.test_enabled
+    return Fogged._resources if Fogged._resources
 
     case Fogged.provider
     when :aws
-      Fogged.resources = aws_resources
+      Fogged._resources = aws_resources
     else
       fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
   end
 
   def self.test_mode!
-    self.test_enabled = true
+    Fogged.test_enabled = true
+    Fogged._resources = test_resources
   end
 
   private
 
   def self.test_resources
     Fog.mock!
-    storage = Fog::Storage.new(
+    Fogged.storage = Fog::Storage.new(
       :provider => "AWS",
       :aws_access_key_id => "XXX",
       :aws_secret_access_key => "XXX"
     )
-    @@aws_key = "XXX"
-    @@aws_secret = "XXX"
-    @@aws_bucket = "test"
-    storage.directories.create(:key => "test")
+    Fogged.aws_key = "XXX"
+    Fogged.aws_secret = "XXX"
+    Fogged.aws_bucket = "test"
+    Fogged.storage.directories.create(:key => "test")
   end
 
   def self.aws_resources
-    fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
-    fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
-    fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
     storage_options = {
       :provider => "AWS",
       :aws_access_key_id => Fogged.aws_key,
       :aws_secret_access_key => Fogged.aws_secret
     }
     storage_options.merge!(:region => Fogged.aws_region) if Fogged.aws_region
-    storage = Fog::Storage.new(storage_options)
+    Fogged.storage = Fog::Storage.new(storage_options)
 
-    storage.directories.get(Fogged.aws_bucket)
+    Fogged.storage.directories.get(Fogged.aws_bucket)
+  end
+
+  def self.check_config
+    case Fogged.provider
+    when :aws
+      fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
+      fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
+      fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
+    else
+      fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
+    end
   end
 end

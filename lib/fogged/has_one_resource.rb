@@ -1,5 +1,5 @@
 module Fogged
-  module ActsAsHavingOneResource
+  module HasOneResource
     extend ActiveSupport::Concern
 
     module ClassMethods
@@ -8,7 +8,7 @@ module Fogged
         :class_name => "Fogged::Resource"
       }
 
-      def acts_as_having_one_resource(*args)
+      def has_one_resource(*args)
         belongs_to :resource, DEFAULT_OPTIONS.merge(args.extract_options!)
         validate :_check_resource, :unless => "resource.blank?"
 
@@ -31,4 +31,4 @@ module Fogged
   end
 end
 
-ActiveRecord::Base.send(:include, Fogged::ActsAsHavingOneResource)
+ActiveRecord::Base.send(:include, Fogged::HasOneResource)

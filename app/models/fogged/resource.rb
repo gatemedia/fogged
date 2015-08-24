@@ -29,33 +29,36 @@ module Fogged
     end
 
     def url
-      storage = Fogged.resources
-      storage.service.try(
-        :request_url,
-        :bucket_name => storage.key,
-        :object_name => fogged_name
-      )
+      Fogged.file_public_url(fogged_name)
     end
 
     def h264_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:h264))
     end
 
     def mpeg_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:mpeg))
     end
 
     def webm_url
-      return unless video?
+      return unless video? && Fogged.zencoder_enabled
       url.gsub(fogged_name, fogged_name_for(:webm))
     end
 
     def thumbnail_urls
-      return unless video?
-      5.times.map do |n|
-        url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+      return unless Fogged.active_job_enabled
+
+      case
+      when video? && Fogged.zencoder_enabled
+        5.times.map do |n|
+          url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+        end
+      when image? && Fogged.minimagick_enabled
+        Fogged.thumbnail_sizes.size.times.map do |n|
+          url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
+        end
       end
     end
 
@@ -68,51 +71,21 @@ module Fogged
     end
 
     def encoding?
-      return false unless video? && encoding_progress.present?
+      unless encoding_progress.present? &&
+             (video? || (image? && Fogged.active_job_enabled))
+        return
+      end
       encoding_progress < 100
     end
 
     def process!
       find_size! if image?
-      encode! if video?
+      encode!
     end
 
     def write(content)
       fogged_file.body = content
       fogged_file.save
-    end
-
-    private
-
-    def find_size!
-      if Fogged.test_enabled
-        update!(
-          :width => 800,
-          :height => 600
-        )
-      else
-        size = FastImage.size(url)
-        update!(
-          :width => size.first,
-          :height => size.second
-        ) unless size.blank?
-      end
-    end
-
-    def encode!
-      return unless Fogged.zencoder_enabled
-      Resources::Encoder.for(self).encode!
-    end
-
-    def ensure_token
-      self.token = generate_token if token.blank?
-    end
-
-    def generate_token
-      loop do
-        a_token = SecureRandom.hex(16)
-        break a_token unless Resource.find_by(:token => a_token)
-      end
     end
 
     def fogged_file
@@ -125,6 +98,37 @@ module Fogged
         :public => true,
         :content_type => content_type
       )
+    end
+
+    def find_size!
+      if Fogged.test_enabled
+        return update!(
+          :width => 800,
+          :height => 600
+        )
+      end
+      size = FastImage.size(url)
+      update!(
+        :width => size.first,
+        :height => size.second
+      ) unless size.blank?
+    end
+
+    def encode!
+      Resources::Encoder.for(self).encode!
+    end
+
+    private
+
+    def ensure_token
+      self.token = generate_token if token.blank?
+    end
+
+    def generate_token
+      loop do
+        a_token = SecureRandom.hex(16)
+        break a_token unless Resource.find_by(:token => a_token)
+      end
     end
 
     def fogged_name

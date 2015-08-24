@@ -5,7 +5,7 @@ module Fogged
     class EncoderTest < ActiveSupport::TestCase
       def setup
         super
-        @resource = fogged_resources(:resource_mov)
+        @resource = fogged_resources(:resource_mov_1)
       end
 
       test "should aws encoder" do

@@ -48,7 +48,7 @@ module Fogged
     end
 
     test "should process resource image" do
-      @resource = fogged_resources(:resource_png)
+      @resource = fogged_resources(:resource_png_1)
 
       @resource.process!
       assert_equal 800, @resource.width
@@ -57,7 +57,7 @@ module Fogged
     end
 
     test "should process resource video" do
-      @resource = fogged_resources(:resource_mov)
+      @resource = fogged_resources(:resource_mov_1)
 
       @resource.process!
 
@@ -69,10 +69,10 @@ module Fogged
       in_a_fork do
         require "zencoder"
         require "delayed_job_active_record"
+        Rails.application.config.active_job.queue_adapter = :delayed_job
+        Fogged.configure
 
-        Fogged.zencoder_enabled = true
-
-        @resource = fogged_resources(:resource_mov)
+        @resource = fogged_resources(:resource_mov_1)
         Zencoder::Job.expects(:create).returns(
           OpenStruct.new(:body => create_output)
         )
