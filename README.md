@@ -119,15 +119,15 @@ The `Fogged::Resource` is the model. It provides some helper methods to get the 
 ### Associations
 Any `ActiveRecord::Base` object can have one or n resources.
 
-To link with one resource, add a `resource_id` column and use `acts_as_having_one_resource`.
+To link with one resource, add a `resource_id` column and use `has_one_resource`.
 
 ```ruby
 class Poster < ActiveRecord::Base
-  acts_as_having_one_resource
+  has_one_resource
 end
 ```
 
-To link with multiple resources, you *must* have a join table and use `acts_as_having_many_resources`.
+To link with multiple resources, you *must* have a join table and use `has_many_resources`.
 
 ```ruby
 class MovieFoggedResource < ActiveRecord::Base
@@ -138,7 +138,7 @@ end
 
 class Movie < ActiveRecord::Base
   has_many :movie_fogged_resources
-  acts_as_having_many_resources :through => :movie_fogged_resources
+  has_many_resources :through => :movie_fogged_resources
 end
 ```
 
@@ -146,7 +146,7 @@ Both macros accept any option you could send to `belongs_to` and `has_many`. As 
 
 ```ruby
 class Poster < ActiveRecord::Base
-  acts_as_having_one_resource :dependent => nil
+  has_one_resource :dependent => nil
 end
 ```
 
