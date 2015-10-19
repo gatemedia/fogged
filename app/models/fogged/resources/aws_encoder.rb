@@ -1,40 +1,48 @@
 module Fogged
   module Resources
-    class AWSEncoder < Struct.new(:resource)
+    class AWSEncoder
+      def initialize(resource)
+        @resource = resource
+      end
+
       def encode!
-        return unless Fogged.active_job_enabled
-        encode_video if resource.video?
-        encode_image if resource.image?
+        encode_video if @resource.video?
+        encode_image if @resource.image?
       end
 
       private
 
       def encode_image
+        return unless Fogged.active_job_enabled
         return unless Fogged.minimagick_enabled
-        AWSThumbnailJob.perform_later(resource)
-        resource.update!(:encoding_progress => 0)
+        AWSThumbnailJob.perform_later(@resource)
+        @resource.update!(:encoding_progress => 0)
       end
 
       def encode_video
         return unless Fogged.zencoder_enabled
         outputs = output
         if Fogged.zencoder_additional_outputs_block
-          additional_outputs = Fogged.zencoder_additional_outputs_block.call(bucket, resource)
+          additional_outputs = Fogged.zencoder_additional_outputs_block.call(bucket, @resource)
           outputs << additional_outputs
           outputs.flatten!
         end
-        job = Zencoder::Job.create(
-          :input => resource.url,
+
+        params = {
+          :input => @resource.url,
           :region => "europe",
           :download_connections => 5,
           :output => outputs
-        )
-        resource.update!(
-          :encoding_job_id => job.body["id"].to_s,
+        }
+
+        if Fogged.zencoder_notification_url
+          params.merge!(:notifications => [Fogged.zencoder_notification_url])
+        end
+
+        @resource.update!(
+          :encoding_job_id => Zencoder::Job.create(params).body["id"].to_s,
           :encoding_progress => 0
         )
-
-        ZencoderPollJob.perform_later(resource)
       end
 
       def output
@@ -47,7 +55,7 @@ module Fogged
               :number => 5,
               :format => "png",
               :base_url => "s3://#{bucket}",
-              :filename => "#{resource.token}-thumbnail-{{number}}",
+              :filename => "#{@resource.token}-thumbnail-{{number}}",
               :public => 1
             }
           },
@@ -65,11 +73,11 @@ module Fogged
       end
 
       def bucket
-        resource.fogged_file.directory.key
+        @resource.fogged_file.directory.key
       end
 
       def fogged_name_for(type, number = 0)
-        resource.send(:fogged_name_for, type, number)
+        @resource.send(:fogged_name_for, type, number)
       end
     end
   end

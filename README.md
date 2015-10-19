@@ -69,10 +69,12 @@ Fogged.test_mode! if Rails.env.test?
 ### Zencoder
 Fogged supports any type of resource. However, for video resources, Fogged provides a support for [Zencoder](https://zencoder.com/en/). When creating a new video, Fogged will enqueue a new job on Zencoder to create several thumbnails and several web compatible videos(namely a MPEG, H264 and WEBM).
 
-To use this, just add the `zencoder` gem and any ActiveJob backend (eg. `delayed_job`) in your application and Fogged will pick it up.
+To use this, just add the `zencoder` gem and Fogged will pick it up.
+
+By default, Fogged will not check for the status of the running job in Zencoder. You can get notified by Zencoder setting the `ZENCODER_NOTIFICATION_URL` environment variable. When Zencoder is done encoding your video, it will post the result to `ZENCODER_NOTIFICATION_URL`. More info on [this](https://app.zencoder.com/docs/guides/getting-started/notifications#api_version_2). There is a route for handling this notification, see the router configuration below.
 
 ### Zencoder custom outputs
-By default, Fogged will create 3 outputs: h264, mp4 and webm. In addition, 5 thumbnails will be created. You can instruct Fogged to create more outputs. To do so, simply use the `zencoder_additional_outputs` hook in the config to register additionnal outputs:
+By default, Fogged will create 3 outputs: h264, mp4 and webm. In addition, 5 thumbnails will be created. You can instruct Fogged to create more outputs. To do so, simply use the `zencoder_additional_outputs` hook in the config to register additional outputs:
 
 ```ruby
 # file: config/initializers/fogged.rb
@@ -160,13 +162,16 @@ mount Fogged::Engine => "/"
 
 This will mount the following routes:
 ```shell
-    resources GET    /resources(.:format)             fogged/resources#index
-              POST   /resources(.:format)             fogged/resources#create
-     resource GET    /resources/:id(.:format)         fogged/resources#show
-              PATCH  /resources/:id(.:format)         fogged/resources#update
-              PUT    /resources/:id(.:format)         fogged/resources#update
-              DELETE /resources/:id(.:format)         fogged/resources#destroy
-              PUT    /resources/:id/confirm(.:format) fogged/resources#confirm
+               confirm_resource PUT    /resources/:id/confirm(.:format)           fogged/resources#confirm
+zencoder_notification_resources POST   /resources/zencoder_notification(.:format) fogged/resources#zencoder_notification
+                      resources GET    /resources(.:format)                       fogged/resources#index
+                                POST   /resources(.:format)                       fogged/resources#create
+                   new_resource GET    /resources/new(.:format)                   fogged/resources#new
+                  edit_resource GET    /resources/:id/edit(.:format)              fogged/resources#edit
+                       resource GET    /resources/:id(.:format)                   fogged/resources#show
+                                PATCH  /resources/:id(.:format)                   fogged/resources#update
+                                PUT    /resources/:id(.:format)                   fogged/resources#update
+                                DELETE /resources/:id(.:format)                   fogged/resources#destroy
 ```
 
 Of course you can decide to mount it in a sub url:

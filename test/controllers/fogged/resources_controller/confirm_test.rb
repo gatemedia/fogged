@@ -19,8 +19,6 @@ module Fogged
     test "should confirm video resource with zencoder enabled" do
       in_a_fork do
         require "zencoder"
-        require "delayed_job_active_record"
-        Rails.application.config.active_job.queue_adapter = :delayed_job
         Fogged.configure
 
         Zencoder::Job.expects(:create).returns(
@@ -28,9 +26,7 @@ module Fogged
         )
         resource = fogged_resources(:resource_mov_1)
 
-        assert_difference("Delayed::Job.count") do
-          put :confirm, :id => resource
-        end
+        put :confirm, :id => resource
 
         assert_json_resource(resource.reload)
         assert resource.encoding_job_id

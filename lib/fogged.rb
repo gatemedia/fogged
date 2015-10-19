@@ -25,8 +25,8 @@ module Fogged
   mattr_accessor :aws_key, :aws_secret, :aws_bucket, :aws_region
 
   # zencoder
-  mattr_accessor :zencoder_polling_frequency do
-    10
+  mattr_accessor :zencoder_notification_url do
+    ENV["ZENCODER_NOTIFICATION_URL"]
   end
 
   # thumbnail sizes
