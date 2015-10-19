@@ -203,8 +203,9 @@ module Fogged
     end
 
     def zencoder_notification
-      if (resource = Resource.find_by(:encoding_job_id => params[:job][:id])) &&
-         (file = params[:outputs].try(:first))
+      if (resource = Resource.find_by(:encoding_job_id => job_params[:id])) &&
+         (file = params[:outputs].try(:first)) &&
+         job_params[:state] == "finished"
 
         resource.update!(
           :encoding_progress => 100,
@@ -270,6 +271,10 @@ module Fogged
       else
         result.limit(count).offset(offset)
       end
+    end
+
+    def job_params
+      params.require(:job).permit(:id, :state)
     end
   end
 end

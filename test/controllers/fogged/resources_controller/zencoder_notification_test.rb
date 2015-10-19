@@ -43,13 +43,27 @@ module Fogged
       refute @resource.duration
     end
 
+    test "should receive zencoder notification with failed job" do
+      refute @resource.encoding_progress
+      refute @resource.width
+      refute @resource.height
+      refute @resource.duration
+
+      post :zencoder_notification, payload(@resource.encoding_job_id, "failed")
+
+      refute @resource.reload.encoding_progress
+      refute @resource.width
+      refute @resource.height
+      refute @resource.duration
+    end
+
     private
 
-    def payload(encoding_job_id)
+    def payload(encoding_job_id, state = "finished")
       {
         :job => {
           :id => encoding_job_id,
-          :state => "finished"
+          :state => state
         },
         :outputs => [
           { :duration_in_ms => 85600, :height => 480, :width => 640 }
