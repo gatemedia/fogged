@@ -40,15 +40,12 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
-          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
           Zencoder::Job.expects(:create).returns(
             OpenStruct.new(:body => create_output)
           )
-          assert_difference("Delayed::Job.count") do
-            encoder.encode!
-          end
+          encoder.encode!
 
           assert resource.encoding?
           assert_equal 0, resource.encoding_progress
@@ -110,7 +107,6 @@ module Fogged
         in_a_fork do
           require "zencoder"
           require "delayed_job_active_record"
-          Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure do |config|
             config.zencoder_additional_outputs do |bucket, res|
               [
@@ -124,12 +120,32 @@ module Fogged
             end
           end
 
-          Zencoder::Job.expects(:create).with { |options| assert_equal 4, options[:output].size }.returns(
+          Zencoder::Job.expects(:create).with() { |options| assert_equal 4, options[:output].size }.returns(
             OpenStruct.new(:body => create_output)
           )
-          assert_difference("Delayed::Job.count") do
-            encoder.encode!
-          end
+          encoder.encode!
+
+          assert resource.encoding?
+          assert_equal 0, resource.encoding_progress
+          assert_equal "1234567890", resource.encoding_job_id
+        end
+      end
+
+      test "should encode video with zencoder notification url" do
+        resource = fogged_resources(:resource_mov_3)
+        encoder = AWSEncoder.new(resource)
+
+        in_a_fork do
+          require "zencoder"
+          require "delayed_job_active_record"
+          Fogged.configure
+          Fogged.stubs(:zencoder_notification_url).returns("http://test")
+
+          Zencoder::Job.expects(:create).with() { |options| assert options[:notifications] }.returns(
+            OpenStruct.new(:body => create_output)
+          )
+
+          encoder.encode!
 
           assert resource.encoding?
           assert_equal 0, resource.encoding_progress

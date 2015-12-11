@@ -77,9 +77,8 @@ module Fogged
           OpenStruct.new(:body => create_output)
         )
 
-        assert_difference("Delayed::Job.count") do
-          @resource.process!
-        end
+        @resource.process!
+
         assert @resource.encoding?
         assert_equal "1234567890", @resource.encoding_job_id
       end

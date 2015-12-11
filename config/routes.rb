@@ -1,4 +1,6 @@
 Fogged::Engine.routes.draw do
-  resources :resources
-  put "resources/:id/confirm" => "resources#confirm"
+  resources :resources do
+    put :confirm, :on => :member
+    post :zencoder_notification, :on => :collection
+  end
 end

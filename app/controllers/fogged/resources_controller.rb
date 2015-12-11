@@ -63,6 +63,7 @@ module Fogged
   class ResourcesController < Fogged.parent_controller.constantize
     before_action :select_resourceables, :only => :index
     before_action :select_resource, :only => [:confirm, :destroy, :show, :update]
+    skip_before_action :verify_authenticity_token, :only => :zencoder_notification
 
     # List all resources. Parameter type is mandatory. It indicates in which
     # "context" you want all resources. You can refine the search, using
@@ -201,6 +202,22 @@ module Fogged
       head :no_content
     end
 
+    def zencoder_notification
+      if (resource = Resource.find_by(:encoding_job_id => job_params[:id])) &&
+         (file = params[:outputs].try(:first)) &&
+         job_params[:state] == "finished"
+
+        resource.update!(
+          :encoding_progress => 100,
+          :width => file[:width],
+          :height => file[:height],
+          :duration => file[:duration_in_ms].to_f / 1000.0
+        )
+      end
+
+      head :ok
+    end
+
     private
 
     def select_resourceables
@@ -212,7 +229,7 @@ module Fogged
 
     def resourceable_clazz
       @_resourceable_clazz ||= resource_type_param.try(:classify)
-                                                  .try(:safe_constantize)
+                               .try(:safe_constantize)
       unless @_resourceable_clazz
         fail(ArgumentError, "Unknown resourceable type: #{params[:type]}")
       end
@@ -254,6 +271,10 @@ module Fogged
       else
         result.limit(count).offset(offset)
       end
+    end
+
+    def job_params
+      params.require(:job).permit(:id, :state)
     end
   end
 end
