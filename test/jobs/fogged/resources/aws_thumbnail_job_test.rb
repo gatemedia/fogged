@@ -19,7 +19,7 @@ module Fogged
 
           AWSThumbnailJob.perform_now(@resource)
 
-          Fogged.thumbnail_sizes.each_with_index do |size, index|
+          %w(50x38 100x75).each_with_index do |size, index|
             key = @resource.send(:fogged_name_for, :thumbnails, index)
             f = Fogged.resources.files.get(key)
             Tempfile.open(["thumbnail", ".png"]) do |t|

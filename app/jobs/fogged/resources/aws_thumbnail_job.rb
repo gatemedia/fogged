@@ -9,9 +9,7 @@ module Fogged
           Tempfile.open(["thumbnail", ".png"]) do |t|
             MiniMagick::Tool::Convert.new do |c|
               c << resource.url
-              c.resize("#{size}^")
-              c.gravity("center")
-              c.extent("#{size}")
+              c.resize("#{size}")
               c << t.path
             end
 
