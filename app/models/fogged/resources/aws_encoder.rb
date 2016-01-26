@@ -56,7 +56,9 @@ module Fogged
               :format => "png",
               :base_url => "s3://#{bucket}",
               :filename => "#{@resource.token}-thumbnail-{{number}}",
-              :public => 1
+              :public => 1,
+              :width => 1920,
+              :height => 1080
             }
           },
           {
