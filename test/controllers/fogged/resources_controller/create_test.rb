@@ -31,13 +31,22 @@ module Fogged
       end
     end
 
-    [:filename, :content_type, :name].each do |field|
+    [:content_type, :name].each do |field|
       test "should not create resource without #{field}" do
         assert_no_difference("Resource.count") do
-          assert_raise(ActionController::ParameterMissing) do
+          assert_raise(ActiveRecord::RecordInvalid) do
             post :create,
                  :resource => @resource_params.merge(field => "")
           end
+        end
+      end
+    end
+
+    test "should not create resource without filename" do
+      assert_no_difference("Resource.count") do
+        assert_raise(ActionController::ParameterMissing) do
+          post :create,
+               :resource => @resource_params.except(:filename)
         end
       end
     end
