@@ -1,6 +1,6 @@
 module Fogged
   class Resource < ActiveRecord::Base
-    validates :extension, :content_type, :presence => true
+    validates :extension, :content_type, :name, :presence => true
 
     before_save :ensure_token
     after_destroy :destroy_fogged_file

@@ -132,12 +132,10 @@ module Fogged
     # Raises 400 if resource params are not valid.
     # Raises 500 if an error occurs.
     def create
-      resource = Resource.create!(
-        :name => resource_params.require(:name),
-        :extension => extension(resource_params.require(:filename)),
-        :content_type => resource_params.require(:content_type),
-        :uploading => true
-      )
+      resource_attributes = resource_params.except(:filename)
+      resource_attributes[:extension] = extension(resource_params.require(:filename))
+
+      resource = Resource.create!(resource_attributes.merge(:uploading => true))
 
       render :json => resource,
              :serializer => ResourceSerializer,
