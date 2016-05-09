@@ -13,6 +13,7 @@ ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', 
 
 require "rails/test_help"
 require "mocha/mini_test"
+require "spawnling"
 
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new
 
@@ -33,31 +34,11 @@ class ActiveSupport::TestCase
     @response_json ||= JSON.parse(response.body, :symbolize_names => true)
   end
 
-  # helper for fork testing
   def in_a_fork
-    ActiveRecord::Base.connection.disconnect!
-    begin
-      rout, wout = IO.pipe
-      pid = fork do
-        STDERR.reopen(wout)
-        begin
-          ActiveRecord::Base.establish_connection
-          yield
-        ensure
-          ActiveRecord::Base.connection.disconnect!
-        end
-
-        SimpleCov.at_exit {}
-      end
-      Process.waitpid(pid)
-      wout.close
-      result = rout.readlines
-      unless result.empty?
-        result.each { |r| STDERR.puts r }
-        fail("Test in a fork has failed")
-      end
-    ensure
-      ActiveRecord::Base.establish_connection
+    spawnling = Spawnling.new do
+      SimpleCov.at_exit {}
+      yield
     end
+    Spawnling.wait(spawnling)
   end
 end

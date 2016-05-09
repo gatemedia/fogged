@@ -67,25 +67,20 @@ module Fogged
 
     test "should process resource video with zencoder enabled" do
       in_a_fork do
-        begin
-          require "zencoder"
-          require "delayed_job_active_record"
-          Rails.application.config.active_job.queue_adapter = :delayed_job
-          Fogged.configure
+        require "zencoder"
+        require "delayed_job_active_record"
+        Rails.application.config.active_job.queue_adapter = :delayed_job
+        Fogged.configure
 
-          @resource = fogged_resources(:resource_mov_1)
-          Zencoder::Job.expects(:create).returns(
-            OpenStruct.new(:body => create_output)
-          )
+        @resource = fogged_resources(:resource_mov_1)
+        Zencoder::Job.expects(:create).returns(
+          OpenStruct.new(:body => create_output)
+        )
 
-          @resource.process!
+        @resource.process!
 
-          assert @resource.encoding?
-          assert_equal "1234567890", @resource.encoding_job_id
-        rescue => e
-          puts "#" * 90
-          puts e.inspect
-        end
+        assert @resource.encoding?
+        assert_equal "1234567890", @resource.encoding_job_id
       end
     end
 

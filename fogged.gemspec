@@ -30,6 +30,7 @@ Gem::Specification.new do |s|
   s.add_development_dependency "zencoder", "~> 2.5"
   s.add_development_dependency "delayed_job_active_record", "~> 4.0"
   s.add_development_dependency "mini_magick", "~> 4.2.1"
-  s.add_development_dependency "rubocop"
+  s.add_development_dependency "rubocop", "~> 0.39.0"
+  s.add_development_dependency "spawnling", "~> 2.1"
   s.add_development_dependency "gatemedia_rubocop", ">= 0.2.0"
 end
