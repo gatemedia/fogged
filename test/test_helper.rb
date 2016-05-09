@@ -35,10 +35,15 @@ class ActiveSupport::TestCase
   end
 
   def in_a_fork
+    ActiveRecord::Base.connection.disconnect!
     spawnling = Spawnling.new do
+      ActiveRecord::Base.establish_connection
       SimpleCov.at_exit {}
       yield
+      ActiveRecord::Base.connection.disconnect!
     end
     Spawnling.wait(spawnling)
+  ensure
+    ActiveRecord::Base.establish_connection
   end
 end
