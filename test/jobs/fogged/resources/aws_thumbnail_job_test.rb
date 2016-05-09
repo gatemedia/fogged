@@ -15,7 +15,7 @@ module Fogged
           Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
-          Resource.any_instance.expects(:url).twice.returns("http://lorempixel.com/800/600/cats")
+          Resource.any_instance.stubs(:url).returns("http://lorempixel.com/800/600/cats/")
 
           AWSThumbnailJob.perform_now(@resource)
 
@@ -40,9 +40,9 @@ module Fogged
           Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
 
-          Resource.any_instance.expects(:url).returns("http://localhost:7777/image")
+          Resource.any_instance.stubs(:url).returns("http://localhost:7777/image")
 
-          assert_raise(MiniMagick::Error) do
+          assert_raise(Errno::ECONNREFUSED) do
             AWSThumbnailJob.perform_now(@resource)
           end
         end
