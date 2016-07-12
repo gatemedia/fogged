@@ -28,6 +28,7 @@ end
 Fogged.test_mode!
 
 class ActiveSupport::TestCase
+  include ActiveJob::TestHelper
   fixtures :all
 
   def response_json

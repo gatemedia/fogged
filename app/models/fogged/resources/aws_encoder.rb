@@ -5,17 +5,22 @@ module Fogged
         @resource = resource
       end
 
-      def encode!
+      def encode!(inline = false)
         encode_video if @resource.video?
-        encode_image if @resource.image?
+        encode_image(inline) if @resource.image?
       end
 
       private
 
-      def encode_image
+      def encode_image(inline = false)
         return unless Fogged.active_job_enabled
         return unless Fogged.minimagick_enabled
-        AWSThumbnailJob.perform_later(@resource)
+        if inline
+          AWSThumbnailJob.perform_now(@resource)
+        else
+          AWSThumbnailJob.perform_later(@resource)
+        end
+
         @resource.update!(:encoding_progress => 0)
       end
 

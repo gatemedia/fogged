@@ -108,6 +108,8 @@ end
 
 When processing an image, Fogged will enqueue as many jobs as necessary to create each thumbnail.
 
+You can also decide to do it inline. When calling `Fogged::Resource#process!`, simple pass `true` and Fogged will execute thumbnails creation inlined within your process.
+
 The thumbnail urls can be retrieved, using `Fogged::Resource#thumbnail_urls`.
 
 ## How to use it

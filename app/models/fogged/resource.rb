@@ -78,9 +78,9 @@ module Fogged
       encoding_progress < 100
     end
 
-    def process!
+    def process!(inline = false)
       find_size! if image?
-      encode!
+      encode!(inline)
     end
 
     def write(content)
@@ -114,8 +114,8 @@ module Fogged
       ) unless size.blank?
     end
 
-    def encode!
-      Resources::Encoder.for(self).encode!
+    def encode!(inline = false)
+      Resources::Encoder.for(self).encode!(inline)
     end
 
     private
