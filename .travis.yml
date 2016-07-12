@@ -5,6 +5,6 @@ script: "bundle exec rake test"
 rvm:
   - 2.2.2
 env:
-  - AWS_KEY="XXX" AWS_SECRET="XXX" AWS_BUCKET="bucket" RUBYOPT="W0"
+  - AWS_KEY="XXX" AWS_SECRET="XXX" AWS_BUCKET="bucket"
 before_script:
   - bundle exec rake db:migrate RAILS_ENV=test
