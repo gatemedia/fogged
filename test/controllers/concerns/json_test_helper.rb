@@ -9,6 +9,8 @@ module JsonTestHelper
     objects.flatten!
     json_objects.flatten!
 
+    puts "#" * 90
+    puts "OBJECTS: #{json_objects.inspect}"
     unless json_objects.empty? || json_objects.first.exclude?(:id)
       objects.sort_by!(&:id)
       json_objects.sort_by! { |e| e[:id] }

@@ -3,6 +3,6 @@ language: ruby
 cache: bundler
 script: "bundle exec rake test"
 env:
-  - AWS_KEY="XXX" AWS_SECRET="XXX" AWS_BUCKET="bucket"
+  - AWS_KEY="XXX" AWS_SECRET="XXX" AWS_BUCKET="bucket" RUBYOPT="W0"
 before_script:
   - bundle exec rake db:migrate
