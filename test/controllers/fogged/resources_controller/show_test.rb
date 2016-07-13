@@ -9,6 +9,8 @@ module Fogged
       resource = fogged_resources(:resource_text_1)
       get :show, :id => resource
 
+      puts "#" * 90
+      puts "BODY: #{response.body}"
       assert_json_resource(resource)
     end
 
