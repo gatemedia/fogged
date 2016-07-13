@@ -9,4 +9,4 @@ rvm:
 env:
   - AWS_KEY="XXX" AWS_SECRET="XXX" AWS_BUCKET="bucket" RUBYOPT="W0"
 before_script:
-  - bundle exec rake db:migrate RAILS_ENV=test
+  - bundle exec rake db:migrate

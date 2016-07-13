@@ -100,6 +100,25 @@ module Fogged
         end
       end
 
+      test "should encode image file inline" do
+        resource = fogged_resources(:resource_png_3)
+        encoder = AWSEncoder.new(resource)
+
+        in_a_fork do
+          require "mini_magick"
+          require "delayed_job_active_record"
+          Rails.application.config.active_job.queue_adapter = :delayed_job
+          Fogged.configure
+          Fogged.thumbnail_sizes = %w(50x50 60x60)
+
+          assert_no_difference("Delayed::Job.count") do
+            encoder.encode!(true)
+          end
+          assert resource.encoding?
+          assert_equal 0, resource.encoding_progress
+        end
+      end
+
       test "should encode video with additional outputs" do
         resource = fogged_resources(:resource_mov_3)
         encoder = AWSEncoder.new(resource)
