@@ -95,9 +95,10 @@ module Fogged
       @fogged_file = files.get(fogged_name) || files.create(
         :key => fogged_name,
         :body => "",
-        :public => true,
         :content_type => content_type
       )
+      @fogged_file.public = "public_read"
+      @fogged_file.tap(&:save)
     end
 
     def find_size!
