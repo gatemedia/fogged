@@ -2,11 +2,11 @@ module Fogged
   module Resources
     class Encoder
       def self.for(resource)
-        "Fogged::Resources::#{provider_for(resource)}Encoder".constantize.new(resource)
+        "Fogged::Resources::#{provider}Encoder".constantize.new(resource)
       end
 
-      def self.provider_for(resource)
-        return :AWS if resource.fogged_file.class.to_s.include?("AWS")
+      def self.provider
+        return :AWS if Fogged.provider == :aws
       end
     end
   end

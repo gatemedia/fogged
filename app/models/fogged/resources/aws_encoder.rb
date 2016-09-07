@@ -41,7 +41,7 @@ module Fogged
         }
 
         if Fogged.zencoder_notification_url
-          params.merge!(:notifications => [Fogged.zencoder_notification_url])
+          params[:notifications] = [Fogged.zencoder_notification_url]
         end
 
         @resource.update!(
@@ -80,7 +80,7 @@ module Fogged
       end
 
       def bucket
-        @resource.fogged_file.directory.key
+        Fogged.resources.key
       end
 
       def fogged_name_for(type, number = 0)
