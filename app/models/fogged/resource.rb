@@ -89,16 +89,16 @@ module Fogged
     end
 
     def fogged_file
-      return @fogged_file if defined?(@fogged_file)
-
-      files = Fogged.resources.files
-      @fogged_file = files.get(fogged_name) || files.create(
-        :key => fogged_name,
-        :body => "",
-        :content_type => content_type
-      )
-      @fogged_file.public = "public_read"
-      @fogged_file.tap(&:save)
+      @_fogged_file ||= begin
+        files = Fogged.resources.files
+        file = files.get(fogged_name) || files.create(
+          :key => fogged_name,
+          :body => "",
+          :content_type => content_type
+        )
+        file.public = "public_read"
+        file.tap(&:save)
+      end
     end
 
     def find_size!
