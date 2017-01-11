@@ -9,13 +9,12 @@ It provides a model, a controller and other Rails utils.
 
 ## Prerequisites
 Fogged has been implemented for:
-* Rails 4.2.x
-* Ruby 2.x but should work for Ruby 1.9
+* Rails 5.x
+* Ruby 2.x
 
 However this gem is built against:
-* ruby 2.0.0
-* ruby 2.1.3
 * ruby 2.2.2
+* ruby 2.3.1
 
 ## Installation
 
