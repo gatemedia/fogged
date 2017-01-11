@@ -10,13 +10,13 @@ class ResourcesControllerIndexTest < ActionController::TestCase
   end
 
   test "should index all resources for movies" do
-    get :index, :type => "movie"
+    get :index, :params => { :type => "movie" }
 
     assert_json_resources(Movie.all.map(&:resources).flatten)
   end
 
   test "should index resources for a movie" do
-    get :index, :type => "movie", :type_id => @movie.id
+    get :index, :params => { :type => "movie", :type_id => @movie.id }
 
     assert_json_resources(@movie.resources.to_a)
   end
@@ -24,8 +24,10 @@ class ResourcesControllerIndexTest < ActionController::TestCase
   test "should index resources for movies" do
     resources = movies(:movie_one, :movie_two).map(&:resources).flatten
     get :index,
-        :type => "movie",
-        :type_ids => movies(:movie_one, :movie_two).map(&:id)
+        :params => {
+          :type => "movie",
+          :type_ids => movies(:movie_one, :movie_two).map(&:id)
+        }
 
     assert_json_resources(resources)
   end
@@ -39,15 +41,20 @@ class ResourcesControllerIndexTest < ActionController::TestCase
     @movie.resources << res
 
     get :index,
-        :type => "movie",
-        :type_id => @movie.id,
-        :query => "test"
+        :params => {
+          :type => "movie",
+          :type_id => @movie.id,
+          :query => "test"
+        }
 
     assert_json_resources([res])
   end
 
   test "should index resources with invalid movie id" do
-    get :index, :type => "movie", :type_id => 1234567890
+    get :index,
+        :params => {
+          :type => "movie", :type_id => 1234567890
+        }
 
     assert_json_resources([])
   end

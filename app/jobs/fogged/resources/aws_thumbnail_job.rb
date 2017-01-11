@@ -23,7 +23,7 @@ module Fogged
                 :key => resource.send(:fogged_name_for, :thumbnails, index),
                 :body => File.read(t.path),
                 :public => true,
-                :content_type => Mime::PNG.to_s
+                :content_type => Mime[:png].to_s
               )
             end
           end
