@@ -12,7 +12,7 @@ module Fogged
 
     test "should destroy resource" do
       assert_difference("Resource.count", -1) do
-        delete :destroy, :id => @resource
+        delete :destroy, :params => { :id => @resource }
       end
 
       assert_response :no_content
@@ -22,7 +22,7 @@ module Fogged
     test "should not destroy resource with invalid id" do
       assert_no_difference("Resource.count") do
         assert_raise(ActiveRecord::RecordNotFound) do
-          delete :destroy, :id => 123456
+          delete :destroy, :params => { :id => 123456 }
         end
       end
     end

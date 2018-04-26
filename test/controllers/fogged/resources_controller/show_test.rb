@@ -7,28 +7,28 @@ module Fogged
 
     test "should show resource" do
       resource = fogged_resources(:resource_text_1)
-      get :show, :id => resource
+      get :show, :params => { :id => resource }
 
       assert_json_resource(resource)
     end
 
     test "should show video resource" do
       resource = fogged_resources(:resource_mov_1)
-      get :show, :id => resource
+      get :show, :params => { :id => resource }
 
       assert_json_resource(resource)
     end
 
     test "should show image resource" do
       resource = fogged_resources(:resource_png_1)
-      get :show, :id => resource
+      get :show, :params => { :id => resource }
 
       assert_json_resource(resource)
     end
 
     test "should not show resource with invalid id" do
       assert_raise(ActiveRecord::RecordNotFound) do
-        get :show, :id => 1234567890
+        get :show, :params => { :id => 1234567890 }
       end
     end
   end

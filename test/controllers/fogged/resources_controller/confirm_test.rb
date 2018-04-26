@@ -8,7 +8,7 @@ module Fogged
     test "should confirm resource" do
       resource = fogged_resources(:resource_png_1)
 
-      put :confirm, :id => resource
+      put :confirm, :params => { :id => resource.id }
 
       assert_json_resource(resource.reload)
       assert_equal 800, resource.width
@@ -26,7 +26,7 @@ module Fogged
         )
         resource = fogged_resources(:resource_mov_1)
 
-        put :confirm, :id => resource
+        put :confirm, :params => { :id => resource.id }
 
         assert_json_resource(resource.reload)
         assert resource.encoding_job_id
@@ -36,7 +36,7 @@ module Fogged
 
     test "should not confirm resource with invalid id" do
       assert_raise(ActiveRecord::RecordNotFound) do
-        put :confirm, :id => 123456
+        put :confirm, :params => { :id => 123456 }
       end
     end
 

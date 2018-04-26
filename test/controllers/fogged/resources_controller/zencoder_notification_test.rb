@@ -16,7 +16,7 @@ module Fogged
       refute @resource.height
       refute @resource.duration
 
-      post :zencoder_notification, payload(@resource.encoding_job_id)
+      post :zencoder_notification, :params => payload(@resource.encoding_job_id)
 
       assert @resource.reload.encoding_progress
       assert @resource.width
@@ -25,7 +25,7 @@ module Fogged
     end
 
     test "should receive zencoder notification with invalid id" do
-      post :zencoder_notification, payload("foobar!")
+      post :zencoder_notification, :params => payload("foobar!")
     end
 
     test "should receive zencoder notification with invalid payload" do
@@ -35,7 +35,7 @@ module Fogged
       refute @resource.duration
 
       post :zencoder_notification,
-           payload(@resource.encoding_job_id).except(:outputs)
+           :params => payload(@resource.encoding_job_id).except(:outputs)
 
       refute @resource.reload.encoding_progress
       refute @resource.width
@@ -49,7 +49,8 @@ module Fogged
       refute @resource.height
       refute @resource.duration
 
-      post :zencoder_notification, payload(@resource.encoding_job_id, "failed")
+      post :zencoder_notification,
+           :params => payload(@resource.encoding_job_id, "failed")
 
       refute @resource.reload.encoding_progress
       refute @resource.width

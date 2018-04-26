@@ -10,7 +10,7 @@ module Fogged
 
       def has_one_resource(*args)
         belongs_to :resource, DEFAULT_OPTIONS.merge(args.extract_options!)
-        validate :_check_resource, :unless => "resource.blank?"
+        validate :_check_resource, :unless => -> { resource.blank? }
 
         define_method(:resource_id) do
           resource.try(:id)

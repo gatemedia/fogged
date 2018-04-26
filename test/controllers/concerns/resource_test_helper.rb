@@ -23,12 +23,15 @@ module ResourceTestHelper
         assert_equal resource.upload_url.chop, json_resource[:upload_url].chop
       end
 
-      if resource.video?
-        [:h264_url, :mpeg_url, :webm_url, :thumbnail_urls].each do |field|
+      next unless resource.video?
+      [:h264_url, :mpeg_url, :webm_url, :thumbnail_urls].each do |field|
+        if resource.send(field)
           assert_equal resource.send(field), json_resource[field]
+        else
+          refute json_resource[field]
         end
-        assert_equal((resource.encoding_progress || 0), json_resource[:encoding_progress])
       end
+      assert_equal((resource.encoding_progress || 0), json_resource[:encoding_progress])
     end
   end
 end
