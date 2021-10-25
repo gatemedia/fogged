@@ -84,6 +84,12 @@ module Fogged
       end
     end
 
+    test "should generate a token before writing file" do
+      refute @resource.token
+      @resource.write("foo")
+      assert @resource.token
+    end
+
     private
 
     def create_output

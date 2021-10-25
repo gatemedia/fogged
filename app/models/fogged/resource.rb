@@ -133,10 +133,12 @@ module Fogged
     end
 
     def fogged_name
+      ensure_token
       "#{token}.#{extension}"
     end
 
     def fogged_name_for(type, number = 0)
+      ensure_token
       case type
       when :h264
         "#{token}-h264.mp4"
