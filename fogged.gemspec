@@ -17,9 +17,9 @@ Gem::Specification.new do |s|
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
   s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", "~> 5.0"
+  s.add_dependency "rails", ">= 5.0"
   s.add_dependency "fog-aws", "~> 2.0.1"
-  s.add_dependency "mime-types", "~> 3.3.1"
+  s.add_dependency "mime-types", ">= 1.15.0"
   s.add_dependency "fastimage", "~> 1.6"
   s.add_dependency "active_model_serializers", "0.8.3"
 
