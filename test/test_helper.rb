@@ -12,7 +12,7 @@ ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db
 ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
 
 require "rails/test_help"
-require "mocha/mini_test"
+require "mocha/minitest"
 require "spawnling"
 
 Minitest.backtrace_filter = Minitest::BacktraceFilter.new

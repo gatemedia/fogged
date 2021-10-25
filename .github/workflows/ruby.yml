@@ -1,0 +1,27 @@
+name: Ruby
+
+on:
+  push:
+    branches: [ "*" ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - run: sudo apt-get install shared-mime-info
+    - uses: actions/checkout@v2
+    - name: Set up Ruby
+      uses: ruby/setup-ruby@v1
+      with:
+        ruby-version: 2.5.7
+        bundler-cache: true
+    - run: |
+
+        echo "AWS_KEY=XXX" >> $GITHUB_ENV
+        echo "AWS_SECRET=XXX" >> $GITHUB_ENV
+        echo "AWS_BUCKET=bucket" >> $GITHUB_ENV
+        echo "RUBYOPT=W0">> $GITHUB_ENV
+    - name: Database setup
+      run: bundle exec rails db:create db:schema:load --trace
+    - name: Run tests
+      run: bundle exec rails test

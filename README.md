@@ -13,7 +13,7 @@ Fogged has been implemented for:
 * Ruby 2.x
 
 However this gem is built against:
-* ruby 2.2.2
+* ruby 2.5.7
 * ruby 2.3.1
 
 ## Installation
