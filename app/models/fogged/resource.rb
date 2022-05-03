@@ -91,7 +91,7 @@ module Fogged
     def fogged_file
       @_fogged_file ||= begin
         files = Fogged.resources.files
-        file = files.get(fogged_name) || files.create(
+        file = files.head(fogged_name) || files.create(
           :key => fogged_name,
           :body => "",
           :content_type => content_type
