@@ -91,13 +91,18 @@ module Fogged
     def fogged_file
       @_fogged_file ||= begin
         files = Fogged.resources.files
-        file = files.head(fogged_name) || files.create(
-          :key => fogged_name,
-          :body => "",
-          :content_type => content_type
-        )
+        file = files.head(fogged_name) || create_fogged_file(files)
+      end
+    end
+
+    def create_fogged_file(files)
+      files.create(
+        :key => fogged_name,
+        :body => "",
+        :content_type => content_type
+      ).tap do |file|
         file.public = "public_read"
-        file.tap(&:save)
+        file.save
       end
     end
 
