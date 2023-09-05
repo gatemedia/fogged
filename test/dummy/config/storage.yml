@@ -1,0 +1,7 @@
+test:
+  service: Disk
+  root: <%= Rails.root.join("test/storage") %>
+
+local:
+  service: Disk
+  root: <%= Rails.root.join("storage") %>

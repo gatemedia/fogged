@@ -13,7 +13,7 @@ module Fogged
         unless options.include?(:through)
           fail(ArgumentError, ":through option is mandatory")
         end
-        has_many :resources, DEFAULT_OPTIONS.merge(options)
+        has_many :resources, **DEFAULT_OPTIONS.merge(options)
         validate :_check_resources, :unless => -> { resources.empty? }
       end
     end
