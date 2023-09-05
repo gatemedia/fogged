@@ -1,4 +1,6 @@
-$LOAD_PATH.push File.expand_path("../lib", __FILE__)
+# frozen_string_literal: true
+
+$LOAD_PATH.push File.expand_path("lib", __dir__)
 
 # Maintain your gem's version:
 require "fogged/version"
@@ -15,23 +17,23 @@ Gem::Specification.new do |s|
   s.license     = "MIT"
 
   s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.rdoc"]
-  s.test_files = Dir["test/**/*"]
 
-  s.add_dependency "rails", ">= 5.0"
-  s.add_dependency "fog-aws", "~> 2.0.1"
-  s.add_dependency "mime-types", ">= 1.15.0"
+  s.add_dependency "active_model_serializers", "~> 0.8.3"
   s.add_dependency "fastimage", "~> 1.6"
-  s.add_dependency "active_model_serializers", "0.8.3"
+  s.add_dependency "fog-aws", "~> 2.0"
+  s.add_dependency "mime-types", ">= 1.15.0"
+  s.add_dependency "rails", ">= 5.0"
 
-  s.add_development_dependency "sqlite3", "~> 1.3"
-  s.add_development_dependency "pry", "~> 0.10"
-  s.add_development_dependency "mocha", "~> 1.1"
-  s.add_development_dependency "minitest-reporters", "~> 1.0"
-  s.add_development_dependency "simplecov", "~> 0.8"
-  s.add_development_dependency "zencoder", "~> 2.5"
   s.add_development_dependency "delayed_job_active_record", "~> 4.0"
   s.add_development_dependency "mini_magick", "~> 4.2.1"
-  s.add_development_dependency "rubocop", "~> 0.39.0"
+  s.add_development_dependency "minitest-reporters", "~> 1.0"
+  s.add_development_dependency "mocha", "~> 2.0"
+  s.add_development_dependency "pry", "~> 0.10"
+  s.add_development_dependency "rubocop"
+  s.add_development_dependency "rubocop-rails"
+  s.add_development_dependency "simplecov", "~> 0.8"
   s.add_development_dependency "spawnling", "~> 2.1"
-  s.add_development_dependency "gatemedia_rubocop", ">= 0.2.0"
+  s.add_development_dependency "sqlite3", "~> 1.3"
+  s.add_development_dependency "zencoder", "~> 2.5"
+  s.metadata["rubygems_mfa_required"] = "true"
 end

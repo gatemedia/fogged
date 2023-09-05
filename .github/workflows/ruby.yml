@@ -9,11 +9,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - run: sudo apt-get install shared-mime-info
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v3
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.5.7
+        ruby-version: 3.2.2
         bundler-cache: true
     - run: |
 
