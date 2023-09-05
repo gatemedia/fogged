@@ -12,7 +12,7 @@ jobs:
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
-        ruby-version: 2.5.7
+        ruby-version: 3.2.2
         bundler-cache: true
     - name: Build and publish gem
       uses: jstastny/publish-gem-to-github@v1.3
