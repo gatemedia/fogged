@@ -4,7 +4,7 @@ module JsonTestHelper
   private
 
   def assert_json_objects(objects, json_objects, *fields)
-    json_objects = [json_objects].flatten
+    json_objects = [json_objects].flatten.compact
 
     objects.flatten!
     json_objects.flatten!
