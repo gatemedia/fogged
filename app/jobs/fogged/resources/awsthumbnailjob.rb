@@ -1,5 +1,3 @@
-require "open-uri"
-
 module Fogged
   module Resources
     class AWSThumbnailJob < ActiveJob::Base
@@ -10,7 +8,7 @@ module Fogged
         Fogged.thumbnail_sizes.each_with_index do |size, index|
           Tempfile.open(source_from(resource.url), :binmode => true, :encoding => "ascii-8bit") do |source|
             Tempfile.open(["thumbnail", ".png"]) do |t|
-              source.write(open(resource.url).read)
+              source.write(URI.parse(resource.url).read)
               source.flush
 
               MiniMagick::Tool::Convert.new do |c|
