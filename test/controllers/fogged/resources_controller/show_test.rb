@@ -8,14 +8,12 @@ module Fogged
     test "should show resource" do
       resource = fogged_resources(:resource_text_1)
       get :show, :params => { :id => resource }
-
       assert_json_resource(resource)
     end
 
     test "should show video resource" do
       resource = fogged_resources(:resource_mov_1)
       get :show, :params => { :id => resource }
-
       assert_json_resource(resource)
     end
 

@@ -1,65 +1,60 @@
 {
   "version": "2.0.0",
+  "command": "bundle",
+  "args": [
+    "exec"
+  ],
   "tasks": [
     {
       "label": "Run test current file",
       "type": "shell",
-      "command": "/usr/bin/bundle",
       "args": [
-        "exec",
-        "rails",
-        "test",
-        "${relativeFile}"
+        "rails test ${relativeFile}"
       ],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": true,
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
       "label": "Run test current line",
       "type": "shell",
-      "command": "/usr/bin/bundle",
       "args": [
-        "exec",
-        "rails",
-        "test",
-        "${relativeFile}:${lineNumber}"
+        "rails test ${relativeFile}:${lineNumber}"
       ],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": true,
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
       "label": "Run all tests",
       "type": "shell",
-      "command": "/usr/bin/bundle",
       "args": [
-        "exec",
-        "rails",
-        "test"
+        "rails test test"
       ],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": true,
-        "panel": "new"
+        "panel": "shared"
       }
     },
     {
       "label": "Rubocop",
       "type": "shell",
-      "command": "bundle exec rubocop",
+      "args": [
+        "rubocop"
+      ],
       "presentation": {
         "echo": true,
         "reveal": "always",
         "focus": true,
-        "panel": "new"
+        "panel": "shared"
       }
     }
   ]

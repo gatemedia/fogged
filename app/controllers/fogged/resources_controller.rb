@@ -62,7 +62,7 @@
 module Fogged
   class ResourcesController < Fogged.parent_controller.constantize
     before_action :select_resourceables, :only => :index
-    before_action :select_resource, :only => [:confirm, :destroy, :show, :update]
+    before_action :select_resource, :only => %i[confirm destroy show update]
     skip_before_action :verify_authenticity_token, :only => :zencoder_notification
 
     # List all resources. Parameter type is mandatory. It indicates in which
@@ -90,6 +90,7 @@ module Fogged
       end
 
       render :json => paginate(resources.flatten.uniq),
+             :adapter => :json,
              :meta => @meta,
              :each_serializer => ResourceSerializer
     end
@@ -107,6 +108,7 @@ module Fogged
     # Raises 500 if an error occurs
     def show
       render :json => @resource,
+             :adapter => :json,
              :serializer => ResourceSerializer
     end
 
@@ -138,6 +140,7 @@ module Fogged
       resource = Resource.create!(resource_attributes.merge(:uploading => true))
 
       render :json => resource,
+             :adapter => :json,
              :serializer => ResourceSerializer,
              :include_upload_url => true
     end
@@ -227,10 +230,9 @@ module Fogged
 
     def resourceable_clazz
       @_resourceable_clazz ||= resource_type_param.try(:classify)
-                               .try(:safe_constantize)
-      unless @_resourceable_clazz
-        fail(ArgumentError, "Unknown resourceable type: #{params[:type]}")
-      end
+                                                  .try(:safe_constantize)
+      raise(ArgumentError, "Unknown resourceable type: #{params[:type]}") unless @_resourceable_clazz
+
       @_resourceable_clazz
     end
 

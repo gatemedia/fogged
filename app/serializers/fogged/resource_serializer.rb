@@ -1,5 +1,6 @@
 module Fogged
   class ResourceSerializer < ActiveModel::Serializer
+    type :resource
     attributes :id, :name, :upload_url, :url
     attributes :h264_url, :mpeg_url, :webm_url, :thumbnail_urls
     attributes :encoding_progress
