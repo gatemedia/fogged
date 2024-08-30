@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   def self.directory_public_url(directory_name)
     case Fogged.provider

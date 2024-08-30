@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   class ResourceSerializer < ActiveModel::Serializer
     type :resource

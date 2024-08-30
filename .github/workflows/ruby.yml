@@ -25,3 +25,5 @@ jobs:
       run: bundle exec rails db:create db:schema:load --trace
     - name: Run tests
       run: bundle exec rails test
+    - name: Lint
+      run: bundle exec rubocop

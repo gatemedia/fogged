@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Rails.application.configure do
   config.active_support.test_order = :sorted
   # Settings specified here will take precedence over those in config/application.rb.

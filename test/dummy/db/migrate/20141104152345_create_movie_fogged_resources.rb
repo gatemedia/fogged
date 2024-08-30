@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class CreateMovieFoggedResources < ActiveRecord::Migration
   def change
     create_table :movie_fogged_resources, force: true do |t|

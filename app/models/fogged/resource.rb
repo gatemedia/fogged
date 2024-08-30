@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 module Fogged
-  class Resource < ActiveRecord::Base
+  class Resource < ApplicationRecord
     validates :extension, :content_type, :name, presence: true
 
     before_save :ensure_token
@@ -75,7 +76,7 @@ module Fogged
     def encoding?
       unless encoding_progress.present? &&
              (video? || (image? && Fogged.active_job_enabled))
-        return
+        return false
       end
 
       encoding_progress < 100

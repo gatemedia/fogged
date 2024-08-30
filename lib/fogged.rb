@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Gem.loaded_specs["fogged"].dependencies.select { |d| d.type == :runtime }.each do |d|
   require d.name
 end
@@ -83,7 +84,7 @@ module Fogged
       aws_access_key_id: Fogged.aws_key,
       aws_secret_access_key: Fogged.aws_secret
     }
-    storage_options.merge!(region: Fogged.aws_region) if Fogged.aws_region
+    storage_options[:region] = Fogged.aws_region if Fogged.aws_region
     Fogged.storage = Fog::Storage.new(storage_options)
 
     Fogged.storage.directories.get(Fogged.aws_bucket)
