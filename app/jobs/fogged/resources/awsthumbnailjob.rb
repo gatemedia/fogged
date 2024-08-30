@@ -11,7 +11,7 @@ module Fogged
               source.write(URI.parse(resource.url).read)
               source.flush
 
-              MiniMagick::Tool::Convert.new do |c|
+              MiniMagick.convert do |c|
                 c << source.path
                 c.resize(size.to_s)
                 c << t.path
