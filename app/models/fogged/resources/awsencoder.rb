@@ -15,17 +15,19 @@ module Fogged
       def encode_image(inline = false)
         return unless Fogged.active_job_enabled
         return unless Fogged.minimagick_enabled
+
         if inline
           AWSThumbnailJob.perform_now(@resource)
         else
           AWSThumbnailJob.perform_later(@resource)
         end
 
-        @resource.update!(:encoding_progress => 0)
+        @resource.update!(encoding_progress: 0)
       end
 
       def encode_video
         return unless Fogged.zencoder_enabled
+
         outputs = output
         if Fogged.zencoder_additional_outputs_block
           additional_outputs = Fogged.zencoder_additional_outputs_block.call(bucket, @resource)
@@ -34,47 +36,45 @@ module Fogged
         end
 
         params = {
-          :input => @resource.url,
-          :region => "europe",
-          :download_connections => 5,
-          :output => outputs
+          input: @resource.url,
+          region: "europe",
+          download_connections: 5,
+          output: outputs
         }
 
-        if Fogged.zencoder_notification_url
-          params[:notifications] = [Fogged.zencoder_notification_url]
-        end
+        params[:notifications] = [Fogged.zencoder_notification_url] if Fogged.zencoder_notification_url
 
         @resource.update!(
-          :encoding_job_id => Zencoder::Job.create(params).body["id"].to_s,
-          :encoding_progress => 0
+          encoding_job_id: Zencoder::Job.create(params).body["id"].to_s,
+          encoding_progress: 0
         )
       end
 
       def output
         [
           {
-            :url => "s3://#{bucket}/#{fogged_name_for(:h264)}",
-            :video_codec => "h264",
-            :public => 1,
-            :thumbnails => {
-              :number => 5,
-              :format => "png",
-              :base_url => "s3://#{bucket}",
-              :filename => "#{@resource.token}-thumbnail-{{number}}",
-              :public => 1,
-              :width => 1920,
-              :height => 1080
+            url: "s3://#{bucket}/#{fogged_name_for(:h264)}",
+            video_codec: "h264",
+            public: 1,
+            thumbnails: {
+              number: 5,
+              format: "png",
+              base_url: "s3://#{bucket}",
+              filename: "#{@resource.token}-thumbnail-{{number}}",
+              public: 1,
+              width: 1920,
+              height: 1080
             }
           },
           {
-            :url => "s3://#{bucket}/#{fogged_name_for(:mpeg)}",
-            :video_codec => "mpeg4",
-            :public => 1
+            url: "s3://#{bucket}/#{fogged_name_for(:mpeg)}",
+            video_codec: "mpeg4",
+            public: 1
           },
           {
-            :url => "s3://#{bucket}/#{fogged_name_for(:webm)}",
-            :video_codec => "vp8",
-            :public => 1
+            url: "s3://#{bucket}/#{fogged_name_for(:webm)}",
+            video_codec: "vp8",
+            public: 1
           }
         ]
       end

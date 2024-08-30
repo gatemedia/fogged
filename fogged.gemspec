@@ -24,16 +24,5 @@ Gem::Specification.new do |s|
   s.add_dependency "mime-types", ">= 1.15.0"
   s.add_dependency "rails", ">= 5.0"
 
-  s.add_development_dependency "delayed_job_active_record", "~> 4.0"
-  s.add_development_dependency "mini_magick", "~> 5.0.1"
-  s.add_development_dependency "minitest-reporters", "~> 1.0"
-  s.add_development_dependency "mocha", "~> 2.0"
-  s.add_development_dependency "pry", "~> 0.10"
-  s.add_development_dependency "rubocop"
-  s.add_development_dependency "rubocop-rails"
-  s.add_development_dependency "simplecov", "~> 0.8"
-  s.add_development_dependency "spawnling", "~> 2.1"
-  s.add_development_dependency "sqlite3", "~> 2.0"
-  s.add_development_dependency "zencoder", "~> 2.5"
   s.metadata["rubygems_mfa_required"] = "true"
 end

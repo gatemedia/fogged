@@ -6,7 +6,7 @@ module Fogged
       end
 
       def self.provider
-        return :AWS if Fogged.provider == :aws
+        :AWS if Fogged.provider == :aws
       end
     end
   end

@@ -20,20 +20,20 @@ module JsonTestHelper
   end
 
   def assert_json_object(object, json_object, *fields)
-    fail(ArgumentError, "fields can't be empty") if fields.blank?
+    raise(ArgumentError, "fields can't be empty") if fields.blank?
+
     fields.each do |field|
       expected_value = object.send(field)
 
-      case
-      when expected_value.is_a?(ActiveSupport::TimeWithZone)
+      if expected_value.is_a?(ActiveSupport::TimeWithZone)
         assert_equal expected_value.iso8601, json_object[field]
-      when expected_value.is_a?(Date)
+      elsif expected_value.is_a?(Date)
         assert_equal Oj.load(expected_value.to_json), json_object[field]
-      when expected_value.is_a?(Enumerable) && expected_value.all? { |e| e.is_a?(Hash) }
+      elsif expected_value.is_a?(Enumerable) && expected_value.all? { |e| e.is_a?(Hash) }
         assert_equal expected_value.map(&:symbolize_keys), json_object[field]
-      when expected_value.is_a?(Enumerable)
+      elsif expected_value.is_a?(Enumerable)
         assert_equal expected_value.sort, json_object[field].sort
-      when expected_value.is_a?(Symbol)
+      elsif expected_value.is_a?(Symbol)
         assert_equal expected_value.to_s, json_object[field]
       else
         assert_equal expected_value, json_object[field]

@@ -2,7 +2,7 @@ require "test_helper"
 
 class MovieTest < ActiveSupport::TestCase
   def setup
-    @movie = Movie.new(:name => "test")
+    @movie = Movie.new(name: "test")
   end
 
   test "should save movie with no resources" do
@@ -18,9 +18,9 @@ class MovieTest < ActiveSupport::TestCase
   test "should not save movie with uploading resource" do
     @movie.resources = fogged_resources(:resource_text_1, :resource_text_2)
     resource = fogged_resources(:resource_text_4)
-    resource.update!(:uploading => true)
+    resource.update!(uploading: true)
     @movie.resources << resource
 
-    refute @movie.save
+    assert_not @movie.save
   end
 end

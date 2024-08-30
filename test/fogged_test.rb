@@ -14,12 +14,12 @@ class FoggedTest < ActiveSupport::TestCase
   end
 
   test "should check if file exists" do
-    refute Fogged.file_exists?("foobar")
+    assert_not Fogged.file_exists?("foobar")
 
     Fogged.resources.files.create(
-      :key => "foobar",
-      :body => "foo",
-      :public => true
+      key: "foobar",
+      body: "foo",
+      public: true
     )
 
     assert Fogged.file_exists?("foobar")

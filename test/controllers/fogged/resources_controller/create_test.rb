@@ -8,15 +8,15 @@ module Fogged
     def setup
       super
       @resource_params = {
-        :name => "Dummy",
-        :filename => "dummy.png",
-        :content_type => "image/png"
+        name: "Dummy",
+        filename: "dummy.png",
+        content_type: "image/png"
       }
     end
 
     test "should create resource" do
       assert_difference("Resource.count") do
-        post :create, :params => { :resource => @resource_params }
+        post :create, params: { resource: @resource_params }
       end
 
       assert_json_resource(Resource.last)
@@ -31,12 +31,12 @@ module Fogged
       end
     end
 
-    [:content_type, :name].each do |field|
+    %i[content_type name].each do |field|
       test "should not create resource without #{field}" do
         assert_no_difference("Resource.count") do
           assert_raise(ActiveRecord::RecordInvalid) do
             post :create,
-                 :params => { :resource => @resource_params.merge(field => "") }
+                 params: { resource: @resource_params.merge(field => "") }
           end
         end
       end
@@ -46,7 +46,7 @@ module Fogged
       assert_no_difference("Resource.count") do
         assert_raise(ActionController::ParameterMissing) do
           post :create,
-               :params => { :resource => @resource_params.except(:filename) }
+               params: { resource: @resource_params.except(:filename) }
         end
       end
     end
@@ -55,7 +55,7 @@ module Fogged
       assert_no_difference("Resource.count") do
         assert_raise(ActiveRecord::RecordInvalid) do
           post :create,
-               :params => { :resource => @resource_params.merge(:filename => "bar") }
+               params: { resource: @resource_params.merge(filename: "bar") }
         end
       end
     end

@@ -1,13 +1,12 @@
-require: rubocop-rails
-
-Style/StringLiterals:
-  EnforcedStyle: double_quotes
-
-Style/HashSyntax:
-  EnforcedStyle: hash_rockets
-
-Style/Documentation:
-  Enabled: false
+inherit_gem:
+  rubocop-github:
+  - config/default.yml # generic Ruby rules and cops
+  - config/rails.yml # Rails-specific rules and cops
 
 AllCops:
   NewCops: enable
+  Exclude:
+    - "test/dummy/db/schema.rb"
+    - "bin/*"
+    - "test/dummy/db/migrate/*_engine.rb"
+    - vendor/bundle/**/*
