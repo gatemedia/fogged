@@ -27,7 +27,7 @@ module Fogged
 
   # zencoder
   mattr_accessor :zencoder_notification_url do
-    ENV["ZENCODER_NOTIFICATION_URL"]
+    ENV.fetch("ZENCODER_NOTIFICATION_URL", nil)
   end
 
   # thumbnail sizes
@@ -55,7 +55,7 @@ module Fogged
     when :aws
       Fogged._resources = aws_resources
     else
-      fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
+      raise(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
   end
 
@@ -64,28 +64,26 @@ module Fogged
     Fogged._resources = test_resources
   end
 
-  private
-
   def self.test_resources
     Fog.mock!
     Fogged.storage = Fog::Storage.new(
-      :provider => "AWS",
-      :aws_access_key_id => "XXX",
-      :aws_secret_access_key => "XXX"
+      provider: "AWS",
+      aws_access_key_id: "XXX",
+      aws_secret_access_key: "XXX"
     )
     Fogged.aws_key = "XXX"
     Fogged.aws_secret = "XXX"
     Fogged.aws_bucket = "test"
-    Fogged.storage.directories.create(:key => "test")
+    Fogged.storage.directories.create(key: "test")
   end
 
   def self.aws_resources
     storage_options = {
-      :provider => "AWS",
-      :aws_access_key_id => Fogged.aws_key,
-      :aws_secret_access_key => Fogged.aws_secret
+      provider: "AWS",
+      aws_access_key_id: Fogged.aws_key,
+      aws_secret_access_key: Fogged.aws_secret
     }
-    storage_options.merge!(:region => Fogged.aws_region) if Fogged.aws_region
+    storage_options.merge!(region: Fogged.aws_region) if Fogged.aws_region
     Fogged.storage = Fog::Storage.new(storage_options)
 
     Fogged.storage.directories.get(Fogged.aws_bucket)
@@ -94,11 +92,11 @@ module Fogged
   def self.check_config
     case Fogged.provider
     when :aws
-      fail(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
-      fail(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
-      fail(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
+      raise(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
+      raise(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
+      raise(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
     else
-      fail(ArgumentError, "Provider #{Fogged.provider} is not available!")
+      raise(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
   end
 end

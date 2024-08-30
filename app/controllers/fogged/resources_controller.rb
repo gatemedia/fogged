@@ -61,9 +61,9 @@
 # }
 module Fogged
   class ResourcesController < Fogged.parent_controller.constantize
-    before_action :select_resourceables, :only => :index
-    before_action :select_resource, :only => %i[confirm destroy show update]
-    skip_before_action :verify_authenticity_token, :only => :zencoder_notification
+    before_action :select_resourceables, only: :index
+    before_action :select_resource, only: %i[confirm destroy show update]
+    skip_before_action :verify_authenticity_token, only: :zencoder_notification
 
     # List all resources. Parameter type is mandatory. It indicates in which
     # "context" you want all resources. You can refine the search, using
@@ -89,10 +89,10 @@ module Fogged
         resourceable.resources.search(params)
       end
 
-      render :json => paginate(resources.flatten.uniq),
-             :adapter => :json,
-             :meta => @meta,
-             :each_serializer => ResourceSerializer
+      render json: paginate(resources.flatten.uniq),
+             adapter: :json,
+             meta: @meta,
+             each_serializer: ResourceSerializer
     end
 
     # Get the resource.
@@ -107,9 +107,9 @@ module Fogged
     # Raises 404 if the Resource is not found
     # Raises 500 if an error occurs
     def show
-      render :json => @resource,
-             :adapter => :json,
-             :serializer => ResourceSerializer
+      render json: @resource,
+             adapter: :json,
+             serializer: ResourceSerializer
     end
 
     # Create a new resource. You must provide a filename (example: foo.png)
@@ -137,12 +137,12 @@ module Fogged
       resource_attributes = resource_params.except(:filename)
       resource_attributes[:extension] = extension(resource_params.require(:filename))
 
-      resource = Resource.create!(resource_attributes.merge(:uploading => true))
+      resource = Resource.create!(resource_attributes.merge(uploading: true))
 
-      render :json => resource,
-             :adapter => :json,
-             :serializer => ResourceSerializer,
-             :include_upload_url => true
+      render json: resource,
+             adapter: :json,
+             serializer: ResourceSerializer,
+             include_upload_url: true
     end
 
     # Update a Resource. You can update the name of a Resource or its context
@@ -183,7 +183,7 @@ module Fogged
     # Raises 500 if a server errors occurs
     def confirm
       @resource.process!
-      @resource.update!(:uploading => false)
+      @resource.update!(uploading: false)
       show
     end
 
@@ -204,15 +204,15 @@ module Fogged
     end
 
     def zencoder_notification
-      if (resource = Resource.find_by(:encoding_job_id => job_params[:id])) &&
+      if (resource = Resource.find_by(encoding_job_id: job_params[:id])) &&
          (file = params[:outputs].try(:first)) &&
          job_params[:state] == "finished"
 
         resource.update!(
-          :encoding_progress => 100,
-          :width => file[:width],
-          :height => file[:height],
-          :duration => file[:duration_in_ms].to_f / 1000.0
+          encoding_progress: 100,
+          width: file[:width],
+          height: file[:height],
+          duration: file[:duration_in_ms].to_f / 1000.0
         )
       end
 
@@ -225,7 +225,7 @@ module Fogged
       ids = params[:type_id] || params[:type_ids]
       ids = [ids] unless ids.respond_to?(:to_ary)
       @resourceables = resourceable_clazz.all
-      @resourceables = resourceable_clazz.where(:id => ids) if ids.try(:any?)
+      @resourceables = resourceable_clazz.where(id: ids) if ids.try(:any?)
     end
 
     def resourceable_clazz
@@ -259,9 +259,9 @@ module Fogged
       offset = (page - 1) * count
       total = result.size
       @meta = {
-        :pagination => {
-          :total => total,
-          :remaining => [total - offset - count, 0].max
+        pagination: {
+          total:,
+          remaining: [total - offset - count, 0].max
         }
       }
 

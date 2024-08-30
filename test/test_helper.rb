@@ -7,9 +7,9 @@ SimpleCov.start "rails"
 require "minitest/reporters"
 Minitest::Reporters.use!(Minitest::Reporters::DefaultReporter.new)
 
-require File.expand_path("../../test/dummy/config/environment.rb",  __FILE__)
-ActiveRecord::Migrator.migrations_paths = [File.expand_path("../../test/dummy/db/migrate", __FILE__)]
-ActiveRecord::Migrator.migrations_paths << File.expand_path('../../db/migrate', __FILE__)
+require File.expand_path("../test/dummy/config/environment.rb", __dir__)
+ActiveRecord::Migrator.migrations_paths = [File.expand_path("../test/dummy/db/migrate", __dir__)]
+ActiveRecord::Migrator.migrations_paths << File.expand_path("../db/migrate", __dir__)
 
 require "rails/test_help"
 require "minitest/unit"
@@ -35,7 +35,7 @@ class ActiveSupport::TestCase
   fixtures :all
 
   def response_json
-    @response_json ||= JSON.parse(response.body, :symbolize_names => true)
+    @response_json ||= JSON.parse(response.body, symbolize_names: true)
   end
 
   def in_a_fork

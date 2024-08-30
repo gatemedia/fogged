@@ -12,9 +12,9 @@ module Fogged
 
     test "should update resource" do
       put :update,
-          :params => {
-            :id => @resource,
-            :resource => { :name => "Update" }
+          params: {
+            id: @resource,
+            resource: { name: "Update" }
           }
 
       assert_json_resource(@resource.reload)
@@ -23,9 +23,9 @@ module Fogged
     test "should not update resource with invalid id" do
       assert_raise(ActiveRecord::RecordNotFound) do
         put :update,
-            :params => {
-              :id => 1234567890,
-              :resource => { :name => "Update" }
+            params: {
+              id: 1_234_567_890,
+              resource: { name: "Update" }
             }
       end
     end

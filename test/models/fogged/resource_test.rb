@@ -5,10 +5,10 @@ module Fogged
     def setup
       super
       @resource = Resource.new(
-        :extension => "txt",
-        :uploading => false,
-        :content_type => "text/plain",
-        :name => "Test"
+        extension: "txt",
+        uploading: false,
+        content_type: "text/plain",
+        name: "Test"
       )
     end
 
@@ -16,16 +16,16 @@ module Fogged
       assert @resource.save
     end
 
-    %w(extension content_type).each do |field|
+    %w[extension content_type].each do |field|
       test "resource without #{field} should not be saved" do
         @resource.send("#{field}=", nil)
 
-        refute @resource.save
+        assert_not @resource.save
       end
     end
 
     test "resource should have a token after being saved" do
-      refute @resource.token
+      assert_not @resource.token
       assert @resource.save
       assert @resource.token
     end
@@ -53,7 +53,7 @@ module Fogged
       @resource.process!
       assert_equal 800, @resource.width
       assert_equal 600, @resource.height
-      refute @resource.encoding?
+      assert_not @resource.encoding?
     end
 
     test "should process resource video" do
@@ -61,8 +61,8 @@ module Fogged
 
       @resource.process!
 
-      refute @resource.encoding?
-      refute @resource.encoding_job_id
+      assert_not @resource.encoding?
+      assert_not @resource.encoding_job_id
     end
 
     test "should process resource video with zencoder enabled" do
@@ -74,7 +74,7 @@ module Fogged
 
         @resource = fogged_resources(:resource_mov_1)
         Zencoder::Job.expects(:create).returns(
-          OpenStruct.new(:body => create_output)
+          OpenStruct.new(body: create_output)
         )
 
         @resource.process!
@@ -85,7 +85,7 @@ module Fogged
     end
 
     test "should generate a token before writing file" do
-      refute @resource.token
+      assert_not @resource.token
       @resource.write("foo")
       assert @resource.token
     end
@@ -94,7 +94,7 @@ module Fogged
 
     def create_output
       {
-        :id => 1234567890
+        id: 1_234_567_890
       }.with_indifferent_access
     end
   end

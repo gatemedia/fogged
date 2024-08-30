@@ -8,12 +8,12 @@ module Fogged
     test "should confirm resource" do
       resource = fogged_resources(:resource_png_1)
 
-      put :confirm, :params => { :id => resource.id }
+      put :confirm, params: { id: resource.id }
 
       assert_json_resource(resource.reload)
       assert_equal 800, resource.width
       assert_equal 600, resource.height
-      refute resource.encoding?
+      assert_not resource.encoding?
     end
 
     test "should confirm video resource with zencoder enabled" do
@@ -22,11 +22,11 @@ module Fogged
         Fogged.configure
 
         Zencoder::Job.expects(:create).returns(
-          OpenStruct.new(:body => create_output)
+          OpenStruct.new(body: create_output)
         )
         resource = fogged_resources(:resource_mov_1)
 
-        put :confirm, :params => { :id => resource.id }
+        put :confirm, params: { id: resource.id }
 
         assert_json_resource(resource.reload)
         assert resource.encoding_job_id
@@ -36,7 +36,7 @@ module Fogged
 
     test "should not confirm resource with invalid id" do
       assert_raise(ActiveRecord::RecordNotFound) do
-        put :confirm, :params => { :id => 123456 }
+        put :confirm, params: { id: 123_456 }
       end
     end
 
@@ -44,7 +44,7 @@ module Fogged
 
     def create_output
       {
-        :id => 1234567890
+        id: 1_234_567_890
       }.with_indifferent_access
     end
   end
