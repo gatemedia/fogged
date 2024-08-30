@@ -1,6 +1,7 @@
+# frozen_string_literal: true
 module Fogged
-  class Resource < ActiveRecord::Base
-    validates :extension, :content_type, :name, :presence => true
+  class Resource < ApplicationRecord
+    validates :extension, :content_type, :name, presence: true
 
     before_save :ensure_token
     after_destroy :destroy_fogged_file
@@ -11,7 +12,7 @@ module Fogged
       if params[:query]
         results = results.where(
           "#{table_name}.name LIKE :query",
-          :query => "%#{params[:query].to_s.downcase}%"
+          query: "%#{params[:query].to_s.downcase}%"
         )
       end
 
@@ -34,28 +35,30 @@ module Fogged
 
     def h264_url
       return unless video? && Fogged.zencoder_enabled
+
       url.gsub(fogged_name, fogged_name_for(:h264))
     end
 
     def mpeg_url
       return unless video? && Fogged.zencoder_enabled
+
       url.gsub(fogged_name, fogged_name_for(:mpeg))
     end
 
     def webm_url
       return unless video? && Fogged.zencoder_enabled
+
       url.gsub(fogged_name, fogged_name_for(:webm))
     end
 
     def thumbnail_urls
       return unless Fogged.active_job_enabled
 
-      case
-      when video? && Fogged.zencoder_enabled
+      if video? && Fogged.zencoder_enabled
         5.times.map do |n|
           url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
         end
-      when image? && Fogged.minimagick_enabled
+      elsif image? && Fogged.minimagick_enabled
         Fogged.thumbnail_sizes.size.times.map do |n|
           url.gsub(fogged_name, fogged_name_for(:thumbnails, n))
         end
@@ -73,8 +76,9 @@ module Fogged
     def encoding?
       unless encoding_progress.present? &&
              (video? || (image? && Fogged.active_job_enabled))
-        return
+        return false
       end
+
       encoding_progress < 100
     end
 
@@ -97,9 +101,9 @@ module Fogged
 
     def create_fogged_file(files)
       files.create(
-        :key => fogged_name,
-        :body => "",
-        :content_type => content_type
+        key: fogged_name,
+        body: "",
+        content_type:
       ).tap do |file|
         file.public = "public_read"
         file.save
@@ -109,15 +113,17 @@ module Fogged
     def find_size!
       if Fogged.test_enabled
         return update!(
-          :width => 800,
-          :height => 600
+          width: 800,
+          height: 600
         )
       end
       size = FastImage.size(url)
+      return if size.blank?
+
       update!(
-        :width => size.first,
-        :height => size.second
-      ) unless size.blank?
+        width: size.first,
+        height: size.second
+      )
     end
 
     def encode!(inline = false)
@@ -133,7 +139,7 @@ module Fogged
     def generate_token
       loop do
         a_token = SecureRandom.hex(16)
-        break a_token unless Resource.find_by(:token => a_token)
+        break a_token unless Resource.find_by(token: a_token)
       end
     end
 
@@ -154,7 +160,7 @@ module Fogged
       when :thumbnails
         "#{token}-thumbnail-#{number}.png"
       else
-        fail(ArgumentError, "Can't get fogged name of #{type}")
+        raise(ArgumentError, "Can't get fogged name of #{type}")
       end
     end
 

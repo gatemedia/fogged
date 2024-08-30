@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "test_helper"
 
 module Fogged
@@ -10,8 +11,8 @@ module Fogged
         in_a_fork do
           encoder.encode!
 
-          refute resource.encoding?
-          refute resource.encoding_job_id
+          assert_not resource.encoding?
+          assert_not resource.encoding_job_id
         end
       end
 
@@ -28,8 +29,8 @@ module Fogged
             encoder.encode!
           end
 
-          refute resource.encoding?
-          refute resource.encoding_job_id
+          assert_not resource.encoding?
+          assert_not resource.encoding_job_id
         end
       end
 
@@ -43,7 +44,7 @@ module Fogged
           Fogged.configure
 
           Zencoder::Job.expects(:create).returns(
-            OpenStruct.new(:body => create_output)
+            OpenStruct.new(body: create_output)
           )
           encoder.encode!
 
@@ -60,8 +61,8 @@ module Fogged
         in_a_fork do
           encoder.encode!
 
-          refute resource.encoding?
-          refute resource.encoding_job_id
+          assert_not resource.encoding?
+          assert_not resource.encoding_job_id
         end
       end
 
@@ -76,8 +77,8 @@ module Fogged
           assert_no_difference("Delayed::Job.count") do
             encoder.encode!
           end
-          refute resource.encoding?
-          refute resource.encoding_job_id
+          assert_not resource.encoding?
+          assert_not resource.encoding_job_id
         end
       end
 
@@ -90,7 +91,7 @@ module Fogged
           require "delayed_job_active_record"
           Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
-          Fogged.thumbnail_sizes = %w(50x50 60x60)
+          Fogged.thumbnail_sizes = %w[50x50 60x60]
 
           assert_difference("Delayed::Job.count") do
             encoder.encode!
@@ -109,7 +110,7 @@ module Fogged
           require "delayed_job_active_record"
           Rails.application.config.active_job.queue_adapter = :delayed_job
           Fogged.configure
-          Fogged.thumbnail_sizes = %w(50x50 60x60)
+          Fogged.thumbnail_sizes = %w[50x50 60x60]
 
           assert_no_difference("Delayed::Job.count") do
             encoder.encode!(true)
@@ -130,17 +131,17 @@ module Fogged
             config.zencoder_additional_outputs do |bucket, res|
               [
                 {
-                  :url => "s3://#{bucket}/#{res.token}-custom1.mp4",
-                  :video_codec => "mpeg4",
-                  :quality => 1,
-                  :public => 1
+                  url: "s3://#{bucket}/#{res.token}-custom1.mp4",
+                  video_codec: "mpeg4",
+                  quality: 1,
+                  public: 1
                 }
               ]
             end
           end
 
-          Zencoder::Job.expects(:create).with() { |options| assert_equal 4, options[:output].size }.returns(
-            OpenStruct.new(:body => create_output)
+          Zencoder::Job.expects(:create).with { |options| assert_equal 4, options[:output].size }.returns(
+            OpenStruct.new(body: create_output)
           )
           encoder.encode!
 
@@ -160,8 +161,8 @@ module Fogged
           Fogged.configure
           Fogged.stubs(:zencoder_notification_url).returns("http://test")
 
-          Zencoder::Job.expects(:create).with() { |options| assert options[:notifications] }.returns(
-            OpenStruct.new(:body => create_output)
+          Zencoder::Job.expects(:create).with { |options| assert options[:notifications] }.returns(
+            OpenStruct.new(body: create_output)
           )
 
           encoder.encode!
@@ -176,7 +177,7 @@ module Fogged
 
       def create_output
         {
-          :id => 1234567890
+          id: 1_234_567_890
         }.with_indifferent_access
       end
     end

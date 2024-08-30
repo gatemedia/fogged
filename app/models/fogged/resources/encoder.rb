@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   module Resources
     class Encoder
@@ -6,7 +7,7 @@ module Fogged
       end
 
       def self.provider
-        return :AWS if Fogged.provider == :aws
+        :AWS if Fogged.provider == :aws
       end
     end
   end

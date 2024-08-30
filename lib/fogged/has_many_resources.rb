@@ -1,30 +1,31 @@
+# frozen_string_literal: true
 module Fogged
   module HasManyResources
     extend ActiveSupport::Concern
 
     module ClassMethods
       DEFAULT_OPTIONS = {
-        :dependent => :destroy,
-        :class_name => "Fogged::Resource"
+        dependent: :destroy,
+        class_name: "Fogged::Resource"
       }
 
       def has_many_resources(*args)
         options = args.extract_options!
-        unless options.include?(:through)
-          fail(ArgumentError, ":through option is mandatory")
-        end
+        raise(ArgumentError, ":through option is mandatory") unless options.include?(:through)
+
         has_many :resources, **DEFAULT_OPTIONS.merge(options)
-        validate :_check_resources, :unless => -> { resources.empty? }
+        validate :_check_resources, unless: -> { resources.empty? }
       end
     end
 
     private
 
     def _check_resources
-      return if resources.to_a.select(&:uploading).empty?
+      return if resources.to_a.none?(&:uploading)
+
       errors.add(:resources, I18n.t("fogged.resources.still_uploading"))
     end
   end
 end
 
-ActiveRecord::Base.send(:include, Fogged::HasManyResources)
+ActiveRecord::Base.include Fogged::HasManyResources

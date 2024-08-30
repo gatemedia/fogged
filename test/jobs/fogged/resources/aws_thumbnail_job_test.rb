@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require "test_helper"
 
 module Fogged
@@ -6,7 +7,7 @@ module Fogged
       def setup
         super
         @resource = fogged_resources(:resource_thumbnail)
-        Fogged.thumbnail_sizes = %w(50x50 100x100)
+        Fogged.thumbnail_sizes = %w[50x50 100x100]
       end
 
       test "should thumbnail the image" do
@@ -19,7 +20,7 @@ module Fogged
 
           AWSThumbnailJob.perform_now(@resource)
 
-          %w(50x38 100x75).each_with_index do |size, index|
+          %w[50x38 100x75].each_with_index do |size, index|
             key = @resource.send(:fogged_name_for, :thumbnails, index)
             f = Fogged.resources.files.get(key)
             Tempfile.open(["thumbnail", ".png"]) do |t|
@@ -29,7 +30,7 @@ module Fogged
               assert_equal size, "#{output_size.first}x#{output_size.second}"
             end
           end
-          refute @resource.encoding?
+          assert_not @resource.encoding?
           assert_equal 100, @resource.reload.encoding_progress
         end
       end

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   module Resources
     class AWSThumbnailJob < ActiveJob::Base
@@ -6,29 +7,29 @@ module Fogged
 
         step = 100 / Fogged.thumbnail_sizes.size
         Fogged.thumbnail_sizes.each_with_index do |size, index|
-          Tempfile.open(source_from(resource.url), :binmode => true, :encoding => "ascii-8bit") do |source|
+          Tempfile.open(source_from(resource.url), binmode: true, encoding: "ascii-8bit") do |source|
             Tempfile.open(["thumbnail", ".png"]) do |t|
               source.write(URI.parse(resource.url).read)
               source.flush
 
-              MiniMagick::Tool::Convert.new do |c|
+              MiniMagick.convert do |c|
                 c << source.path
                 c.resize(size.to_s)
                 c << t.path
               end
 
               Fogged.resources.files.create(
-                :key => resource.send(:fogged_name_for, :thumbnails, index),
-                :body => File.read(t.path),
-                :public => true,
-                :content_type => Mime[:png].to_s
+                key: resource.send(:fogged_name_for, :thumbnails, index),
+                body: File.read(t.path),
+                public: true,
+                content_type: Mime[:png].to_s
               )
             end
           end
 
           resource.increment!(:encoding_progress, step)
         end
-        resource.update!(:encoding_progress => 100)
+        resource.update!(encoding_progress: 100)
       end
 
       private
