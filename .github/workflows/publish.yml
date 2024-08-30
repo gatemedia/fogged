@@ -8,14 +8,23 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v1
+    - uses: actions/checkout@v4
+      with:
+        submodules: true
     - name: Set up Ruby
       uses: ruby/setup-ruby@v1
       with:
         ruby-version: 3.3
         bundler-cache: true
-    - name: Build and publish gem
-      uses: jstastny/publish-gem-to-github@v1.3
-      with:
-        token: ${{ secrets.GITHUB_TOKEN }}
-        owner: gatemedia
+    - name: Build gem
+      run: gem build fogged.gemspec
+    - name: Configure RubyGems
+      run: |
+          mkdir -p ~/.gem
+          touch ~/.gem/credentials
+          chmod 0600 ~/.gem/credentials
+          echo ":github: Bearer ${GITHUB_TOKEN}" > ~/.gem/credentials
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Publish to GitHub Package Registry
+      run: gem push fogged-*.gem --key github --host https://rubygems.pkg.github.com/gatemedia
