@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   module HasManyResources
     extend ActiveSupport::Concern
@@ -20,7 +21,7 @@ module Fogged
     private
 
     def _check_resources
-      return if resources.to_a.select(&:uploading).empty?
+      return if resources.to_a.none?(&:uploading)
 
       errors.add(:resources, I18n.t("fogged.resources.still_uploading"))
     end

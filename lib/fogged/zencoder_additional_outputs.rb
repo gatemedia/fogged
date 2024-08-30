@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   mattr_accessor :zencoder_additional_outputs_block
 

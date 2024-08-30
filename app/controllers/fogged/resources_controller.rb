@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # The Resource API. This API has only 3 methods: create, confirm and destroy.
 #
 # To create a new resource, call the create method with a filename and a

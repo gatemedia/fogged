@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module Fogged
   def self.with_directory(directory_name)
     old_resources = Fogged._resources

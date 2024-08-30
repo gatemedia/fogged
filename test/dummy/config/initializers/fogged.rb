@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 Fogged.configure do |config|
   config.provider = :aws
   config.aws_key = ENV.fetch("AWS_KEY", nil)
