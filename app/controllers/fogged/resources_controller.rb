@@ -90,9 +90,9 @@ module Fogged
         resourceable.resources.search(params)
       end
 
-      render :json => paginate(resources.flatten.uniq),
-             :meta => @meta,
-             :each_serializer => ResourceSerializer
+      render json: paginate(resources.flatten.uniq),
+             meta: @meta,
+             each_serializer: ResourceSerializer
     end
 
     # Get the resource.
@@ -107,8 +107,8 @@ module Fogged
     # Raises 404 if the Resource is not found
     # Raises 500 if an error occurs
     def show
-      render :json => @resource,
-             :serializer => ResourceSerializer
+      render json: @resource,
+             serializer: ResourceSerializer
     end
 
     # Create a new resource. You must provide a filename (example: foo.png)
@@ -138,9 +138,9 @@ module Fogged
 
       resource = Resource.create!(resource_attributes.merge(uploading: true))
 
-      render :json => resource,
-             :serializer => ResourceSerializer,
-             :include_upload_url => true
+      render json: resource,
+             serializer: ResourceSerializer,
+             include_upload_url: true
     end
 
     # Update a Resource. You can update the name of a Resource or its context
@@ -254,7 +254,7 @@ module Fogged
 
     def paginate(result)
       page = Integer(params[:page] || 1)
-      count = Integer(params[:count] || 50).to_i
+      count = Integer(params[:count] || 50)
       offset = (page - 1) * count
       total = result.size
       @meta = {
