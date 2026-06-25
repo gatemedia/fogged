@@ -6,7 +6,8 @@ module Fogged
     module ClassMethods
       DEFAULT_OPTIONS = {
         dependent: :destroy,
-        class_name: "Fogged::Resource"
+        class_name: "Fogged::Resource",
+        optional: true
       }
 
       def has_one_resource(*args)

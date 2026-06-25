@@ -25,8 +25,9 @@ module ResourceTestHelper
       next unless resource.video?
 
       %i[h264_url mpeg_url webm_url thumbnail_urls].each do |field|
-        if resource.send(field)
-          assert_equal resource.send(field), json_resource[field]
+        value = resource.method(field).call
+        if value
+          assert_equal value, json_resource[field]
         else
           assert_not json_resource[field]
         end

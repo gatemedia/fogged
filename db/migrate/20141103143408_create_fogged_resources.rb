@@ -7,7 +7,7 @@ class CreateFoggedResources < ActiveRecord::Migration
       t.integer :width
       t.integer :height
       t.string :extension, null: false
-      t.boolean :uploading # rubocop:disable Rails/ThreeStateBooleanColumn
+      t.boolean :uploading
       t.string :content_type, null: false
       t.integer :encoding_progress
       t.string :encoding_job_id

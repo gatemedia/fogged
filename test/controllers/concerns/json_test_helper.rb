@@ -24,13 +24,13 @@ module JsonTestHelper
     raise(ArgumentError, "fields can't be empty") if fields.blank?
 
     fields.each do |field|
-      expected_value = object.send(field)
+      expected_value = object.method(field).call
 
       if expected_value.is_a?(ActiveSupport::TimeWithZone)
         assert_equal expected_value.iso8601, json_object[field]
       elsif expected_value.is_a?(Date)
         assert_equal Oj.load(expected_value.to_json), json_object[field]
-      elsif expected_value.is_a?(Enumerable) && expected_value.all? { |e| e.is_a?(Hash) }
+      elsif expected_value.is_a?(Enumerable) && expected_value.all?(Hash)
         assert_equal expected_value.map(&:symbolize_keys), json_object[field]
       elsif expected_value.is_a?(Enumerable)
         assert_equal expected_value.sort, json_object[field].sort

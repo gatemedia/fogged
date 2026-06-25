@@ -1,2 +1,2 @@
 # frozen_string_literal: true
-Fog.mock! if Rails.env.test?
+Fogged.test_mode! if Rails.env.test?
