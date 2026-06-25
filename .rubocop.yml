@@ -10,3 +10,7 @@ AllCops:
     - "bin/*"
     - "test/dummy/db/migrate/*_engine.rb"
     - vendor/bundle/**/*
+
+Rails/StrongParametersExpect:
+  # params.expect is Rails 8-only; Fogged 0.4 still supports Rails 7.
+  Enabled: false

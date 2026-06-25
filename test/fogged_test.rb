@@ -6,6 +6,18 @@ class FoggedTest < ActiveSupport::TestCase
     assert_kind_of Module, Fogged
   end
 
+  test "should require AWS region" do
+    previous_region = Fogged.aws_region
+    Fogged.aws_region = nil
+
+    error = assert_raise(ArgumentError) do
+      Fogged.configure
+    end
+    assert_equal "AWS region is mandatory", error.message
+  ensure
+    Fogged.aws_region = previous_region
+  end
+
   test "should return directory public url" do
     assert_equal "https://test.s3.amazonaws.com/", Fogged.directory_public_url("test")
   end

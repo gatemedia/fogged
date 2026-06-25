@@ -4,6 +4,7 @@ Gem.loaded_specs["fogged"].dependencies.select { |d| d.type == :runtime }.each d
 end
 
 require "fogged/engine"
+require "fogged/storage"
 require "fogged/inflections"
 require "fogged/has_one_resource"
 require "fogged/has_many_resources"
@@ -66,12 +67,7 @@ module Fogged
   end
 
   def self.test_resources
-    Fog.mock!
-    Fogged.storage = Fog::Storage.new(
-      provider: "AWS",
-      aws_access_key_id: "XXX",
-      aws_secret_access_key: "XXX"
-    )
+    Fogged.storage = Storage::Mock.new
     Fogged.aws_key = "XXX"
     Fogged.aws_secret = "XXX"
     Fogged.aws_bucket = "test"
@@ -79,13 +75,11 @@ module Fogged
   end
 
   def self.aws_resources
-    storage_options = {
-      provider: "AWS",
-      aws_access_key_id: Fogged.aws_key,
-      aws_secret_access_key: Fogged.aws_secret
-    }
-    storage_options[:region] = Fogged.aws_region if Fogged.aws_region
-    Fogged.storage = Fog::Storage.new(storage_options)
+    Fogged.storage = Storage::Aws.new(
+      access_key_id: Fogged.aws_key,
+      secret_access_key: Fogged.aws_secret,
+      region: Fogged.aws_region
+    )
 
     Fogged.storage.directories.get(Fogged.aws_bucket)
   end
@@ -96,6 +90,7 @@ module Fogged
       raise(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
       raise(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
       raise(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
+      raise(ArgumentError, "AWS region is mandatory") unless Fogged.aws_region
     else
       raise(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end
