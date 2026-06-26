@@ -59,4 +59,15 @@ class ResourcesControllerIndexTest < ActionController::TestCase
 
     assert_json_resources([])
   end
+
+  test "should return an empty resources page when page is out of range" do
+    get :index,
+        params: {
+          type: "movie",
+          type_id: @movie.id,
+          page: 999
+        }
+
+    assert_json_resources([])
+  end
 end
