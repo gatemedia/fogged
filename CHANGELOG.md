@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.4.1
+
+This release follows up on `0.4.0` with review fixes for the modernization
+release.
+
+### Consumer notes
+
+- AWS configuration now treats blank `aws_key`, `aws_secret`, `aws_bucket`, and
+  `aws_region` values as missing. This makes blank environment variables fail
+  the same way as omitted values.
+- Paginated resource index requests that ask beyond the available collection now
+  return an empty JSON array instead of `nil`.
+- The published gem file list now includes `README.md` and `CHANGELOG.md`.
+
 ## 0.4.0
 
 This release modernizes Fogged for current Rails and Ruby applications and
