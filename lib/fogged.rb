@@ -87,10 +87,10 @@ module Fogged
   def self.check_config
     case Fogged.provider
     when :aws
-      raise(ArgumentError, "AWS key is mandatory") unless Fogged.aws_key
-      raise(ArgumentError, "AWS secret is mandatory") unless Fogged.aws_secret
-      raise(ArgumentError, "AWS bucket is mandatory") unless Fogged.aws_bucket
-      raise(ArgumentError, "AWS region is mandatory") unless Fogged.aws_region
+      raise(ArgumentError, "AWS key is mandatory") if Fogged.aws_key.blank?
+      raise(ArgumentError, "AWS secret is mandatory") if Fogged.aws_secret.blank?
+      raise(ArgumentError, "AWS bucket is mandatory") if Fogged.aws_bucket.blank?
+      raise(ArgumentError, "AWS region is mandatory") if Fogged.aws_region.blank?
     else
       raise(ArgumentError, "Provider #{Fogged.provider} is not available!")
     end

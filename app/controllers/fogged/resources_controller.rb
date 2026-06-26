@@ -265,7 +265,7 @@ module Fogged
 
       case result
       when Array
-        result.slice(offset, count)
+        result.slice(offset, count) || []
       else
         result.limit(count).offset(offset)
       end

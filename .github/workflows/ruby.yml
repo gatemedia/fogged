@@ -18,7 +18,7 @@ jobs:
       AWS_SECRET: XXX
       AWS_BUCKET: bucket
       AWS_REGION: eu-west-1
-      RUBYOPT: W0
+      RUBYOPT: -W0
     steps:
     - uses: actions/checkout@v4
     - name: Set up Ruby
